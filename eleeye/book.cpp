@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 book.h/book.cpp - Source Code for ElephantEye, Part VI
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
@@ -27,16 +27,16 @@ int GetBookMoves(const PositionStruct &pos, const char *szBookFile, BookStruct *
   BookFileStruct BookFile;
   PositionStruct posScan;
   BookStruct bk;
-  int nScan, nLow, nHigh, nPtr;
+  int nScan, nLow, nHigh, nPtr = 0;
   int i, j, nMoves;
-  // ´Ó¿ª¾Ö¿âÖĞËÑË÷×Å·¨µÄÀı³Ì£¬ÓĞÒÔÏÂ¼¸¸ö²½Öè£º
+  // ä»å¼€å±€åº“ä¸­æœç´¢ç€æ³•çš„ä¾‹ç¨‹ï¼Œæœ‰ä»¥ä¸‹å‡ ä¸ªæ­¥éª¤ï¼š
 
-  // 1. ´ò¿ª¿ª¾Ö¿â£¬Èç¹û´ò¿ªÊ§°Ü£¬Ôò·µ»Ø¿ÕÖµ£»
+  // 1. æ‰“å¼€å¼€å±€åº“ï¼Œå¦‚æœæ‰“å¼€å¤±è´¥ï¼Œåˆ™è¿”å›ç©ºå€¼ï¼›
   if (!BookFile.Open(szBookFile)) {
     return 0;
   }
 
-  // 2. ÓÃ²ğ°ë²éÕÒ·¨ËÑË÷¾ÖÃæ£»
+  // 2. ç”¨æ‹†åŠæŸ¥æ‰¾æ³•æœç´¢å±€é¢ï¼›
   posScan = pos;
   for (nScan = 0; nScan < 2; nScan ++) {
     nPtr = nLow = 0;
@@ -55,18 +55,18 @@ int GetBookMoves(const PositionStruct &pos, const char *szBookFile, BookStruct *
     if (nLow <= nHigh) {
       break;
     }
-    // Ô­¾ÖÃæºÍ¾µÏñ¾ÖÃæ¸÷ËÑË÷Ò»ÌË
+    // åŸå±€é¢å’Œé•œåƒå±€é¢å„æœç´¢ä¸€è¶Ÿ
     posScan.Mirror();
   }
 
-  // 3. Èç¹û²»µ½¾ÖÃæ£¬Ôò·µ»Ø¿Õ×Å£»
+  // 3. å¦‚æœä¸åˆ°å±€é¢ï¼Œåˆ™è¿”å›ç©ºç€ï¼›
   if (nScan == 2) {
     BookFile.Close();
     return 0;
   }
   __ASSERT_BOUND(0, nPtr, BookFile.nLen - 1);
 
-  // 4. Èç¹ûÕÒµ½¾ÖÃæ£¬ÔòÏòÇ°²éÕÒµÚÒ»¸ö×Å·¨£»
+  // 4. å¦‚æœæ‰¾åˆ°å±€é¢ï¼Œåˆ™å‘å‰æŸ¥æ‰¾ç¬¬ä¸€ä¸ªç€æ³•ï¼›
   for (nPtr --; nPtr >= 0; nPtr --) {
     BookFile.Read(bk, nPtr);
     if (BOOK_POS_CMP(bk, posScan) < 0) {
@@ -74,7 +74,7 @@ int GetBookMoves(const PositionStruct &pos, const char *szBookFile, BookStruct *
     }
   }
 
-  // 5. ÏòºóÒÀ´Î¶ÁÈëÊôÓÚ¸Ã¾ÖÃæµÄÃ¿¸ö×Å·¨£»
+  // 5. å‘åä¾æ¬¡è¯»å…¥å±äºè¯¥å±€é¢çš„æ¯ä¸ªç€æ³•ï¼›
   nMoves = 0;
   for (nPtr ++; nPtr < BookFile.nLen; nPtr ++) {
     BookFile.Read(bk, nPtr);
@@ -82,7 +82,7 @@ int GetBookMoves(const PositionStruct &pos, const char *szBookFile, BookStruct *
       break;
     }
     if (posScan.LegalMove(bk.wmv)) {
-      // Èç¹û¾ÖÃæÊÇµÚ¶şÌËËÑË÷µ½µÄ£¬Ôò×Å·¨±ØĞë×ö¾µÏñ
+      // å¦‚æœå±€é¢æ˜¯ç¬¬äºŒè¶Ÿæœç´¢åˆ°çš„ï¼Œåˆ™ç€æ³•å¿…é¡»åšé•œåƒ
       lpbks[nMoves].nPtr = nPtr;
       lpbks[nMoves].wmv = (nScan == 0 ? bk.wmv : MOVE_MIRROR(bk.wmv));
       lpbks[nMoves].wvl = bk.wvl;
@@ -94,7 +94,7 @@ int GetBookMoves(const PositionStruct &pos, const char *szBookFile, BookStruct *
   }
   BookFile.Close();
 
-  // 6. ¶Ô×Å·¨°´·ÖÖµÅÅĞò
+  // 6. å¯¹ç€æ³•æŒ‰åˆ†å€¼æ’åº
   for (i = 0; i < nMoves - 1; i ++) {
     for (j = nMoves - 1; j > i; j --) {
       if (lpbks[j - 1].wvl < lpbks[j].wvl) {
