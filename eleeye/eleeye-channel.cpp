@@ -1,13 +1,13 @@
-﻿//
-//  command-channel.cpp
+//
+//  eleeye-channel.cpp
 //  Runner
 //
 //  Created by 贺照云 on 2020/3/10.
 //
 
 #include <stdlib.h>
-#include "command-queue.h"
-#include "command-channel.h"
+#include "eleeye-queue.h"
+#include "eleeye-channel.h"
 
 CommandChannel *CommandChannel::instance = NULL;
 

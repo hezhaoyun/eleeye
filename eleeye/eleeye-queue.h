@@ -1,12 +1,12 @@
-﻿//
-//  command-queue.h
+//
+//  eleeye-queue.h
 //  Runner
 //
 //  Created by 贺照云 on 2020/3/10.
 //
 
-#ifndef command_queue_h
-#define command_queue_h
+#ifndef eleeye_queue_h
+#define eleeye_queue_h
 
 class CommandQueue {
     
@@ -25,4 +25,4 @@ public:
     bool read(char *dest);
 };
 
-#endif /* command_queue_h */
+#endif /* eleeye_queue_h */

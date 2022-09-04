@@ -1,12 +1,12 @@
-﻿//
-//  command-channel.h
+//
+//  eleeye-channel.h
 //  Runner
 //
 //  Created by 贺照云 on 2020/3/10.
 //
 
-#ifndef command_channel_h
-#define command_channel_h
+#ifndef eleeye_channel_h
+#define eleeye_channel_h
 
 class CommandQueue;
 
@@ -32,4 +32,4 @@ private:
     CommandQueue *responseQueue;
 };
 
-#endif /* command_channel_h */
+#endif /* eleeye_channel_h */

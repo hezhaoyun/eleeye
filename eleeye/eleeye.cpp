@@ -29,7 +29,7 @@
 #include "position.h"
 #include "hash.h"
 #include "search.h"
-#include "command-channel.h"
+#include "eleeye-channel.h"
 #include "eleeye.h"
 
 int SearchDepth = 64;

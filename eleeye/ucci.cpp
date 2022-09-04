@@ -14,7 +14,7 @@
 #include "parse.h"
 #include "pipe.h"
 #include "ucci.h"
-#include "command-channel.h"
+#include "eleeye-channel.h"
 #include "eleeye.h"
 
 /* UCCI指令分析模块由三各UCCI指令解释器组成。
