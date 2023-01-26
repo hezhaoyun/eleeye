@@ -262,7 +262,7 @@ static int SearchQuiesc(PositionStruct &pos, int vlAlpha, int vlBeta) {
       return vl;
     }
     vlBest = vl;
-    vlAlpha = MAX(vl, vlAlpha);
+    vlAlpha = Max(vl, vlAlpha);
 
     // 8. 对于未被将军的局面，生成并排序所有吃子着法(MVV(LVA)启发)；
     MoveSort.InitQuiesc(pos);
@@ -284,7 +284,7 @@ static int SearchQuiesc(PositionStruct &pos, int vlAlpha, int vlBeta) {
           return vl;
         }
         vlBest = vl;
-        vlAlpha = MAX(vl, vlAlpha);
+        vlAlpha = Max(vl, vlAlpha);
       }
     }
   }
@@ -368,11 +368,11 @@ static int SearchCut(int vlBeta, int nDepth, bool bNoNull = false) {
     if (vl >= vlBeta) {
       if (Search.pos.NullSafe()) {
         // a. 如果空着裁剪不带检验，那么记录深度至少为(NULL_DEPTH + 1)；
-        RecordHash(Search.pos, HASH_BETA, vl, MAX(nDepth, NULL_DEPTH + 1), 0);
+        RecordHash(Search.pos, HASH_BETA, vl, Max(nDepth, NULL_DEPTH + 1), 0);
         return vl;
       } else if (SearchCut(vlBeta, nDepth - NULL_DEPTH, NO_NULL) >= vlBeta) {
         // b. 如果空着裁剪带检验，那么记录深度至少为(NULL_DEPTH)；
-        RecordHash(Search.pos, HASH_BETA, vl, MAX(nDepth, NULL_DEPTH), 0);
+        RecordHash(Search.pos, HASH_BETA, vl, Max(nDepth, NULL_DEPTH), 0);
         return vl;
       }
     }

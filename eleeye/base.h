@@ -28,29 +28,10 @@ typedef unsigned __int8  uint8_t;  // uc
 #define __ASSERT_BOUND(a, b, c) assert((a) <= (b) && (b) <= (c))
 #define __ASSERT_BOUND_2(a, b, c, d) assert((a) <= (b) && (b) <= (c) && (c) <= (d))
 
-inline bool EQV(bool bArg1, bool bArg2) {
-    return bArg1 ? bArg2 : !bArg2;
-}
-
-inline bool XOR(bool bArg1, bool bArg2) {
-    return bArg1 ? !bArg2 : bArg2;
-}
-
-template <typename T> inline T MIN(T Arg1, T Arg2) {
-    return Arg1 < Arg2 ? Arg1 : Arg2;
-}
-
-template <typename T> inline T MAX(T Arg1, T Arg2) {
-    return Arg1 > Arg2 ? Arg1 : Arg2;
-}
-
-template <typename T> inline T ABS(T Arg) {
-    return Arg < 0 ? -Arg : Arg;
-}
-
-template <typename T> inline T SQR(T Arg) {
-    return Arg * Arg;
-}
+#define Min(Arg1, Arg2)     (Arg1 < Arg2 ? Arg1 : Arg2)
+#define Max(Arg1, Arg2)     (Arg1 > Arg2 ? Arg1 : Arg2)
+#define Abs(Arg)            (Arg < 0 ? -Arg : Arg)
+#define Sqr(Arg)            (Arg * Arg)
 
 template <typename T> inline void SWAP(T &Arg1, T &Arg2) {
     T Temp;

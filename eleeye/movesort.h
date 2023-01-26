@@ -139,7 +139,7 @@ inline void CopyKiller(uint16_t (*lpwmvDst)[2], const uint16_t (*lpwmvSrc)[2]) {
  * ElephantEye使用最传统的平方关系。
  */
 inline void SetBestMove(int mv, int nDepth, uint16_t *lpwmvKiller) {
-  nHistory[mv] += SQR(nDepth);
+  nHistory[mv] += Sqr(nDepth);
   if (lpwmvKiller[0] != mv) {
     lpwmvKiller[1] = lpwmvKiller[0];
     lpwmvKiller[0] = mv;

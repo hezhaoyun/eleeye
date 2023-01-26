@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include <string.h>
 
 #ifndef PARSE_H
@@ -146,7 +146,7 @@ inline bool StrSplitSkip(char *&szSrc, int nSeparator, char *szDst = NULL) {
 inline int Str2Digit(const char *sz, int nMin, int nMax) {
   int nRet;
   if (sscanf(sz, "%d", &nRet) > 0) {
-    return MIN(MAX(nRet, nMin), nMax);
+    return Min(Max(nRet, nMin), nMax);
   } else {
     return nMin;
   }

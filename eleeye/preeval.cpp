@@ -415,8 +415,8 @@ void PositionStruct::PreEvaluate(void) {
   } else {
     nBlackAttacks += (nBlackSimpleValue - nWhiteSimpleValue) * 2;
   }
-  nWhiteAttacks = MIN(nWhiteAttacks, TOTAL_ATTACK_VALUE);
-  nBlackAttacks = MIN(nBlackAttacks, TOTAL_ATTACK_VALUE);
+  nWhiteAttacks = Min(nWhiteAttacks, TOTAL_ATTACK_VALUE);
+  nBlackAttacks = Min(nBlackAttacks, TOTAL_ATTACK_VALUE);
   PreEvalEx.vlBlackAdvisorLeakage = TOTAL_ADVISOR_LEAKAGE * nWhiteAttacks / TOTAL_ATTACK_VALUE;
   PreEvalEx.vlWhiteAdvisorLeakage = TOTAL_ADVISOR_LEAKAGE * nBlackAttacks / TOTAL_ATTACK_VALUE;
   __ASSERT_BOUND(0, nWhiteAttacks, TOTAL_ATTACK_VALUE);

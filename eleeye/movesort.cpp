@@ -99,7 +99,7 @@ int MoveSortStruct::InitEvade(PositionStruct &pos, int mv, const uint16_t *lpwmv
       } else if (mvs[i].wmv == lpwmvKiller[1]) {
         mvs[i].wvl = SORT_VALUE_MAX - 2;
       } else {
-        mvs[i].wvl = MIN(mvs[i].wvl + 1, SORT_VALUE_MAX - 3);
+        mvs[i].wvl = Min(mvs[i].wvl + 1, SORT_VALUE_MAX - 3);
       }
     } else {
       mvs[i].wvl = 0;

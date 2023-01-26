@@ -84,7 +84,7 @@ void RecordHash(const PositionStruct &pos, int nFlag, int vl, int nDepth, int mv
     }
 
     // 4. 如果不是一样的局面，那么获得深度最小的置换表项；
-    nHashDepth = MAX((hsh.ucAlphaDepth == 0 ? 0 : hsh.ucAlphaDepth + 256),
+    nHashDepth = Max((hsh.ucAlphaDepth == 0 ? 0 : hsh.ucAlphaDepth + 256),
         (hsh.wmv == 0 ? hsh.ucBetaDepth : hsh.ucBetaDepth + 256));
     __ASSERT(nHashDepth < 512);
     if (nHashDepth < nMinDepth) {

@@ -353,7 +353,7 @@ bool PositionStruct::MakeMove(int mv) {
     if (LastMove().CptDrw == -100) {
       lprbs->mvs.CptDrw = -100;
     } else {
-      lprbs->mvs.CptDrw = MIN((int) LastMove().CptDrw, 0) - (lprbs->mvs.ChkChs > 0 || LastMove().ChkChs > 0 ? 0 : 1);
+      lprbs->mvs.CptDrw = Min((int) LastMove().CptDrw, 0) - (lprbs->mvs.ChkChs > 0 || LastMove().ChkChs > 0 ? 0 : 1);
     }
     __ASSERT_BOUND(-100, lprbs->mvs.CptDrw, 0);
   } else {
