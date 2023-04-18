@@ -4,6 +4,8 @@
 #ifndef RC4PRNG_H
 #define RC4PRNG_H
 
+#pragma warning(disable:4244)
+
 struct RC4Struct {
   uint8_t s[256];
   int x, y;
@@ -31,13 +33,7 @@ struct RC4Struct {
       uint32_t dw[2];
       uint64_t qw;
     } Seed;
-    timeb tb;
-    ftime(&tb);
-#if defined __arm__ || defined __mips__
     Seed.qw = 0;
-#else
-    Seed.qw = TimeStampCounter();
-#endif
     Seed.dw[1] ^= (uint32_t) GetTime();
     Init(&Seed, 8);
   }
