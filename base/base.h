@@ -1,5 +1,10 @@
 #include <assert.h>
+
+#ifdef _WIN32
 #include <sys/timeb.h>
+#else
+#include <time.h>
+#endif
 
 #ifndef BASE_H
 #define BASE_H
@@ -79,9 +84,15 @@ inline int PopCnt32(uint32_t dw) {
 }
 
 inline int64_t GetTime() {
+#ifdef _WIN32
   timeb tb;
-  ftime(&tb);
-  return (int64_t) tb.time * 1000 + tb.millitm;
+    ftime(&tb);
+    return (int64_t)tb.time * 1000 + tb.millitm;
+#else
+  timespec ts = {0, 0};
+  clock_gettime(CLOCK_REALTIME, &ts);
+  return ts.tv_sec * 1000 + ts.tv_nsec / 1000 / 1000 / 1000;
+#endif
 }
 
 #endif
