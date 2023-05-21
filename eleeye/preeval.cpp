@@ -20,34 +20,34 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "base.h"
+#include "../base/base.h"
 #include "pregen.h"
 #include "position.h"
 #include "preeval.h"
 
-/* ElephantEyeæºç¨‹åºä½¿ç”¨çš„åŒˆç‰™åˆ©è®°å·çº¦å®šï¼š
+/* ElephantEyeÔ´³ÌĞòÊ¹ÓÃµÄĞÙÑÀÀû¼ÇºÅÔ¼¶¨£º
  *
- * sq: æ ¼å­åºå·(æ•´æ•°ï¼Œä»0åˆ°255ï¼Œå‚é˜…"pregen.cpp")
- * pc: æ£‹å­åºå·(æ•´æ•°ï¼Œä»0åˆ°47ï¼Œå‚é˜…"position.cpp")
- * pt: æ£‹å­ç±»å‹åºå·(æ•´æ•°ï¼Œä»0åˆ°6ï¼Œå‚é˜…"position.cpp")
- * mv: ç€æ³•(æ•´æ•°ï¼Œä»0åˆ°65535ï¼Œå‚é˜…"position.cpp")
- * sd: èµ°å­æ–¹(æ•´æ•°ï¼Œ0ä»£è¡¨çº¢æ–¹ï¼Œ1ä»£è¡¨é»‘æ–¹)
- * vl: å±€é¢ä»·å€¼(æ•´æ•°ï¼Œä»"-MATE_VALUE"åˆ°"MATE_VALUE"ï¼Œå‚é˜…"position.cpp")
- * (æ³¨ï¼šä»¥ä¸Šäº”ä¸ªè®°å·å¯ä¸ucã€dwç­‰ä»£è¡¨æ•´æ•°çš„è®°å·é…åˆä½¿ç”¨)
- * pos: å±€é¢(PositionStructç±»å‹ï¼Œå‚é˜…"position.h")
- * sms: ä½è¡Œå’Œä½åˆ—çš„ç€æ³•ç”Ÿæˆé¢„ç½®ç»“æ„(å‚é˜…"pregen.h")
- * smv: ä½è¡Œå’Œä½åˆ—çš„ç€æ³•åˆ¤æ–­é¢„ç½®ç»“æ„(å‚é˜…"pregen.h")
+ * sq: ¸ñ×ÓĞòºÅ(ÕûÊı£¬´Ó0µ½255£¬²ÎÔÄ"pregen.cpp")
+ * pc: Æå×ÓĞòºÅ(ÕûÊı£¬´Ó0µ½47£¬²ÎÔÄ"position.cpp")
+ * pt: Æå×ÓÀàĞÍĞòºÅ(ÕûÊı£¬´Ó0µ½6£¬²ÎÔÄ"position.cpp")
+ * mv: ×Å·¨(ÕûÊı£¬´Ó0µ½65535£¬²ÎÔÄ"position.cpp")
+ * sd: ×ß×Ó·½(ÕûÊı£¬0´ú±íºì·½£¬1´ú±íºÚ·½)
+ * vl: ¾ÖÃæ¼ÛÖµ(ÕûÊı£¬´Ó"-MATE_VALUE"µ½"MATE_VALUE"£¬²ÎÔÄ"position.cpp")
+ * (×¢£ºÒÔÉÏÎå¸ö¼ÇºÅ¿ÉÓëuc¡¢dwµÈ´ú±íÕûÊıµÄ¼ÇºÅÅäºÏÊ¹ÓÃ)
+ * pos: ¾ÖÃæ(PositionStructÀàĞÍ£¬²ÎÔÄ"position.h")
+ * sms: Î»ĞĞºÍÎ»ÁĞµÄ×Å·¨Éú³ÉÔ¤ÖÃ½á¹¹(²ÎÔÄ"pregen.h")
+ * smv: Î»ĞĞºÍÎ»ÁĞµÄ×Å·¨ÅĞ¶ÏÔ¤ÖÃ½á¹¹(²ÎÔÄ"pregen.h")
  */
 
-/* å­åŠ›ä½ç½®ä»·å€¼è¡¨
- * ElephantEyeçš„å­åŠ›ä½ç½®ä»·å€¼è¡¨å¯¹å±€é¢è¯„ä»·çš„å¯¼å‘èµ·äº†å¾ˆå¤§çš„ä½œç”¨ï¼Œåœ¨å‚ç…§â€œæ¢¦å…¥ç¥è›‹â€ç¨‹åºçš„åŸºç¡€ä¸Šï¼Œä½œäº†å¦‚ä¸‹æ”¹åŠ¨ï¼š
- * 1. æŠŠæ£‹åŠ›åŸºæœ¬åˆ†å’Œä½ç½®ç›¸å…³åˆ†ç»„åˆåœ¨ä¸€èµ·ï¼Œä»¥åˆ©äºå¿«é€Ÿè¿ç®—ï¼›
- * 2. ä¸€ä¹è·¯çš„å…µ(å’)åœ¨å·¡æ²³ä½ç½®åˆ†å€¼å‡å°‘äº†5åˆ†ï¼Œä»¥å‡å°‘ç›²ç›®è¿›è¾¹å…µ(å’)çš„æƒ…å†µï¼›
- * 3. è¿‡æ²³å…µ(å’)(åº•çº¿é™¤å¤–)å¤šåŠ 10åˆ†ï¼Œä»¥å‡å°‘è¿‡æ²³å…µ(å’)ç›²ç›®æ¢ä»•(å£«)ç›¸(è±¡)çš„æƒ…å†µï¼›
- * 4. ä¸€ä¹è·¯è½¦åœ¨æ¨ªè½¦çš„ä½ç½®åˆ†å€¼å‡å°‘äº†5åˆ†ï¼Œä»¥å‡å°‘ä¸Šä»•(å£«)æ—¶è¿˜èµ·æ— æ„ä¹‰çš„æ¨ªè½¦çš„æƒ…å†µã€‚
+/* ×ÓÁ¦Î»ÖÃ¼ÛÖµ±í
+ * ElephantEyeµÄ×ÓÁ¦Î»ÖÃ¼ÛÖµ±í¶Ô¾ÖÃæÆÀ¼ÛµÄµ¼ÏòÆğÁËºÜ´óµÄ×÷ÓÃ£¬ÔÚ²ÎÕÕ¡°ÃÎÈëÉñµ°¡±³ÌĞòµÄ»ù´¡ÉÏ£¬×÷ÁËÈçÏÂ¸Ä¶¯£º
+ * 1. °ÑÆåÁ¦»ù±¾·ÖºÍÎ»ÖÃÏà¹Ø·Ö×éºÏÔÚÒ»Æğ£¬ÒÔÀûÓÚ¿ìËÙÔËËã£»
+ * 2. Ò»¾ÅÂ·µÄ±ø(×ä)ÔÚÑ²ºÓÎ»ÖÃ·ÖÖµ¼õÉÙÁË5·Ö£¬ÒÔ¼õÉÙÃ¤Ä¿½ø±ß±ø(×ä)µÄÇé¿ö£»
+ * 3. ¹ıºÓ±ø(×ä)(µ×Ïß³ıÍâ)¶à¼Ó10·Ö£¬ÒÔ¼õÉÙ¹ıºÓ±ø(×ä)Ã¤Ä¿»»ÊË(Ê¿)Ïà(Ïó)µÄÇé¿ö£»
+ * 4. Ò»¾ÅÂ·³µÔÚºá³µµÄÎ»ÖÃ·ÖÖµ¼õÉÙÁË5·Ö£¬ÒÔ¼õÉÙÉÏÊË(Ê¿)Ê±»¹ÆğÎŞÒâÒåµÄºá³µµÄÇé¿ö¡£
  */
 
-// 1. å¼€ä¸­å±€ã€æœ‰è¿›æ”»æœºä¼šçš„å¸…(å°†)å’Œå…µ(å’)ï¼Œå‚ç…§â€œæ¢¦å…¥ç¥è›‹â€
+// 1. ¿ªÖĞ¾Ö¡¢ÓĞ½ø¹¥»ú»áµÄË§(½«)ºÍ±ø(×ä)£¬²ÎÕÕ¡°ÃÎÈëÉñµ°¡±
 static const uint8_t cucvlKingPawnMidgameAttacking[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -67,7 +67,7 @@ static const uint8_t cucvlKingPawnMidgameAttacking[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 2. å¼€ä¸­å±€ã€æ²¡æœ‰è¿›æ”»æœºä¼šçš„å¸…(å°†)å’Œå…µ(å’)
+// 2. ¿ªÖĞ¾Ö¡¢Ã»ÓĞ½ø¹¥»ú»áµÄË§(½«)ºÍ±ø(×ä)
 static const uint8_t cucvlKingPawnMidgameAttackless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -87,7 +87,7 @@ static const uint8_t cucvlKingPawnMidgameAttackless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 3. æ®‹å±€ã€æœ‰è¿›æ”»æœºä¼šçš„å¸…(å°†)å’Œå…µ(å’)
+// 3. ²Ğ¾Ö¡¢ÓĞ½ø¹¥»ú»áµÄË§(½«)ºÍ±ø(×ä)
 static const uint8_t cucvlKingPawnEndgameAttacking[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -107,7 +107,7 @@ static const uint8_t cucvlKingPawnEndgameAttacking[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 4. æ®‹å±€ã€æ²¡æœ‰è¿›æ”»æœºä¼šçš„å¸…(å°†)å’Œå…µ(å’)
+// 4. ²Ğ¾Ö¡¢Ã»ÓĞ½ø¹¥»ú»áµÄË§(½«)ºÍ±ø(×ä)
 static const uint8_t cucvlKingPawnEndgameAttackless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -127,7 +127,7 @@ static const uint8_t cucvlKingPawnEndgameAttackless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 5. æ²¡å—å¨èƒçš„ä»•(å£«)å’Œç›¸(è±¡)
+// 5. Ã»ÊÜÍşĞ²µÄÊË(Ê¿)ºÍÏà(Ïó)
 static const uint8_t cucvlAdvisorBishopThreatless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -147,7 +147,7 @@ static const uint8_t cucvlAdvisorBishopThreatless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 5'. å¯å‡å˜çš„ï¼Œæ²¡å—å¨èƒçš„ä»•(å£«)å’Œç›¸(è±¡)
+// 5'. ¿ÉÉı±äµÄ£¬Ã»ÊÜÍşĞ²µÄÊË(Ê¿)ºÍÏà(Ïó)
 static const uint8_t cucvlAdvisorBishopPromotionThreatless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -167,7 +167,7 @@ static const uint8_t cucvlAdvisorBishopPromotionThreatless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 6. å—åˆ°å¨èƒçš„ä»•(å£«)å’Œç›¸(è±¡)ï¼Œå‚ç…§â€œæ¢¦å…¥ç¥è›‹â€
+// 6. ÊÜµ½ÍşĞ²µÄÊË(Ê¿)ºÍÏà(Ïó)£¬²ÎÕÕ¡°ÃÎÈëÉñµ°¡±
 static const uint8_t cucvlAdvisorBishopThreatened[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -187,7 +187,7 @@ static const uint8_t cucvlAdvisorBishopThreatened[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 7. å¼€ä¸­å±€çš„é©¬ï¼Œå‚ç…§â€œæ¢¦å…¥ç¥è›‹â€
+// 7. ¿ªÖĞ¾ÖµÄÂí£¬²ÎÕÕ¡°ÃÎÈëÉñµ°¡±
 static const uint8_t cucvlKnightMidgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -207,7 +207,7 @@ static const uint8_t cucvlKnightMidgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 8. æ®‹å±€çš„é©¬
+// 8. ²Ğ¾ÖµÄÂí
 static const uint8_t cucvlKnightEndgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -227,7 +227,7 @@ static const uint8_t cucvlKnightEndgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 9. å¼€ä¸­å±€çš„è½¦ï¼Œå‚ç…§â€œæ¢¦å…¥ç¥è›‹â€
+// 9. ¿ªÖĞ¾ÖµÄ³µ£¬²ÎÕÕ¡°ÃÎÈëÉñµ°¡±
 static const uint8_t cucvlRookMidgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -247,7 +247,7 @@ static const uint8_t cucvlRookMidgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 10. æ®‹å±€çš„è½¦
+// 10. ²Ğ¾ÖµÄ³µ
 static const uint8_t cucvlRookEndgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -267,7 +267,7 @@ static const uint8_t cucvlRookEndgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 11. å¼€ä¸­å±€çš„ç‚®ï¼Œå‚ç…§â€œæ¢¦å…¥ç¥è›‹â€
+// 11. ¿ªÖĞ¾ÖµÄÅÚ£¬²ÎÕÕ¡°ÃÎÈëÉñµ°¡±
 static const uint8_t cucvlCannonMidgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -287,7 +287,7 @@ static const uint8_t cucvlCannonMidgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// 12. æ®‹å±€çš„ç‚®
+// 12. ²Ğ¾ÖµÄÅÚ
 static const uint8_t cucvlCannonEndgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -307,27 +307,27 @@ static const uint8_t cucvlCannonEndgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
-// ç©ºå¤´ç‚®çš„å¨èƒåˆ†å€¼ï¼ŒæŒ‡æ ‡æ˜¯å¯¹çº¢æ–¹æ¥è¯´çš„è¡Œå·(å³é»‘æ–¹è¦ç”¨15å»å‡)ï¼Œå¤§ä½“ä¸Šç©ºå¤´ç‚®ä½ç½®è¶Šé«˜å¨èƒè¶Šå¤§ã€‚è¿›å…¥æ®‹å±€æ—¶ï¼Œè¯¥å€¼è¦ç›¸åº”å‡å°‘ã€‚
+// ¿ÕÍ·ÅÚµÄÍşĞ²·ÖÖµ£¬Ö¸±êÊÇ¶Ôºì·½À´ËµµÄĞĞºÅ(¼´ºÚ·½ÒªÓÃ15È¥¼õ)£¬´óÌåÉÏ¿ÕÍ·ÅÚÎ»ÖÃÔ½¸ßÍşĞ²Ô½´ó¡£½øÈë²Ğ¾ÖÊ±£¬¸ÃÖµÒªÏàÓ¦¼õÉÙ¡£
 static const int cvlHollowThreat[16] = {
    0,  0,  0,  0,  0,  0, 60, 65, 70, 75, 80, 80, 80,  0,  0,  0
 };
 
-// ç‚®é•‡çªå¿ƒé©¬çš„å¨èƒåˆ†å€¼ï¼ŒæŒ‡æ ‡åŒä¸Šï¼Œå¤§ä½“ä¸Šé«˜åº¦è¶Šä½å¨èƒè¶Šå¤§ï¼Œæ²¡æœ‰çªå¿ƒé©¬æ—¶å¯å–å››åˆ†ä¹‹ä¸€ã€‚è¿›å…¥æ®‹å±€æ—¶ï¼Œå–å€¼ä¼¼ä¹ä¸åº”å˜åŒ–ã€‚
+// ÅÚÕòÎÑĞÄÂíµÄÍşĞ²·ÖÖµ£¬Ö¸±êÍ¬ÉÏ£¬´óÌåÉÏ¸ß¶ÈÔ½µÍÍşĞ²Ô½´ó£¬Ã»ÓĞÎÑĞÄÂíÊ±¿ÉÈ¡ËÄ·ÖÖ®Ò»¡£½øÈë²Ğ¾ÖÊ±£¬È¡ÖµËÆºõ²»Ó¦±ä»¯¡£
 static const int cvlCentralThreat[16] = {
    0,  0,  0,  0,  0,  0, 50, 45, 40, 35, 30, 30, 30,  0,  0,  0
 };
 
-// æ²‰åº•ç‚®çš„å¨èƒåˆ†å€¼ï¼ŒæŒ‡æ ‡æ˜¯åˆ—å·ï¼Œå¤§ä½“ä¸Šè¶Šé è¿‘è¾¹çº¿å¨èƒè¶Šå¤§ã€‚å¨èƒå‡å°‘æ—¶ï¼Œè¯¥å€¼è¦ç›¸åº”å‡å°‘ã€‚
+// ³Áµ×ÅÚµÄÍşĞ²·ÖÖµ£¬Ö¸±êÊÇÁĞºÅ£¬´óÌåÉÏÔ½¿¿½ü±ßÏßÍşĞ²Ô½´ó¡£ÍşĞ²¼õÉÙÊ±£¬¸ÃÖµÒªÏàÓ¦¼õÉÙ¡£
 static const int cvlBottomThreat[16] = {
    0,  0,  0, 40, 30,  0,  0,  0,  0,  0, 30, 40,  0,  0,  0,  0
 };
 
-// æœ¬æ¨¡å—åªæ¶‰åŠåˆ°"PositionStruct"ä¸­çš„"ucsqPieces"ã€"dwBitPiece/wBitPiece"ã€"vlWhite"å’Œ"vlBlack"å››ä¸ªæˆå‘˜ï¼Œæ•…çœç•¥å‰é¢çš„"this->"
+// ±¾Ä£¿éÖ»Éæ¼°µ½"PositionStruct"ÖĞµÄ"ucsqPieces"¡¢"dwBitPiece/wBitPiece"¡¢"vlWhite"ºÍ"vlBlack"ËÄ¸ö³ÉÔ±£¬¹ÊÊ¡ÂÔÇ°ÃæµÄ"this->"
 
-/* å±€é¢é¢„è¯„ä»·å°±æ˜¯åˆå§‹åŒ–å±€é¢é¢„è¯„ä»·æ•°æ®(PreEvalå’ŒPreEvalEx)çš„è¿‡ç¨‹ã€‚
- * ElephantEyeçš„å±€é¢é¢„è¯„ä»·ä¸»è¦åˆ†ä»¥ä¸‹ä¸¤ä¸ªæ–¹é¢ï¼š
- * 1. åˆ¤æ–­å±€åŠ¿å¤„äºå¼€ä¸­å±€è¿˜æ˜¯æ®‹å±€é˜¶æ®µï¼›
- * 2. åˆ¤æ–­æ¯ä¸€æ–¹æ˜¯å¦å¯¹å¯¹æ–¹å½¢æˆå¨èƒã€‚
+/* ¾ÖÃæÔ¤ÆÀ¼Û¾ÍÊÇ³õÊ¼»¯¾ÖÃæÔ¤ÆÀ¼ÛÊı¾İ(PreEvalºÍPreEvalEx)µÄ¹ı³Ì¡£
+ * ElephantEyeµÄ¾ÖÃæÔ¤ÆÀ¼ÛÖ÷Òª·ÖÒÔÏÂÁ½¸ö·½Ãæ£º
+ * 1. ÅĞ¶Ï¾ÖÊÆ´¦ÓÚ¿ªÖĞ¾Ö»¹ÊÇ²Ğ¾Ö½×¶Î£»
+ * 2. ÅĞ¶ÏÃ¿Ò»·½ÊÇ·ñ¶Ô¶Ô·½ĞÎ³ÉÍşĞ²¡£
  */
 
 const int ROOK_MIDGAME_VALUE = 6;
@@ -349,17 +349,17 @@ void PositionStruct::PreEvaluate(void) {
 
   if (!bInit) {
     bInit = true;
-    // åˆå§‹åŒ–"PreEvalEx.cPopCnt16"æ•°ç»„ï¼Œåªéœ€è¦åˆå§‹åŒ–ä¸€æ¬¡
+    // ³õÊ¼»¯"PreEvalEx.cPopCnt16"Êı×é£¬Ö»ĞèÒª³õÊ¼»¯Ò»´Î
     for (i = 0; i < 65536; i ++) {
       PreEvalEx.cPopCnt16[i] = PopCnt16(i);
     }
   }
 
-  // é¦–å…ˆåˆ¤æ–­å±€åŠ¿å¤„äºå¼€ä¸­å±€è¿˜æ˜¯æ®‹å±€é˜¶æ®µï¼Œæ–¹æ³•æ˜¯è®¡ç®—å„ç§æ£‹å­çš„æ•°é‡ï¼ŒæŒ‰ç…§è½¦=6ã€é©¬ç‚®=3ã€å…¶å®ƒ=1ç›¸åŠ ã€‚
+  // Ê×ÏÈÅĞ¶Ï¾ÖÊÆ´¦ÓÚ¿ªÖĞ¾Ö»¹ÊÇ²Ğ¾Ö½×¶Î£¬·½·¨ÊÇ¼ÆËã¸÷ÖÖÆå×ÓµÄÊıÁ¿£¬°´ÕÕ³µ=6¡¢ÂíÅÚ=3¡¢ÆäËü=1Ïà¼Ó¡£
   nMidgameValue = PopCnt32(this->dwBitPiece & BOTH_BITPIECE(ADVISOR_BITPIECE | BISHOP_BITPIECE | PAWN_BITPIECE)) * OTHER_MIDGAME_VALUE;
   nMidgameValue += PopCnt32(this->dwBitPiece & BOTH_BITPIECE(KNIGHT_BITPIECE | CANNON_BITPIECE)) * KNIGHT_CANNON_MIDGAME_VALUE;
   nMidgameValue += PopCnt32(this->dwBitPiece & BOTH_BITPIECE(ROOK_BITPIECE)) * ROOK_MIDGAME_VALUE;
-  // ä½¿ç”¨äºŒæ¬¡å‡½æ•°ï¼Œå­åŠ›å¾ˆå°‘æ—¶æ‰è®¤ä¸ºæ¥è¿‘æ®‹å±€
+  // Ê¹ÓÃ¶ş´Îº¯Êı£¬×ÓÁ¦ºÜÉÙÊ±²ÅÈÏÎª½Ó½ü²Ğ¾Ö
   nMidgameValue = (2 * TOTAL_MIDGAME_VALUE - nMidgameValue) * nMidgameValue / TOTAL_MIDGAME_VALUE;
   __ASSERT_BOUND(0, nMidgameValue, TOTAL_MIDGAME_VALUE);
   PreEval.vlAdvanced = (TOTAL_ADVANCED_VALUE * nMidgameValue + TOTAL_ADVANCED_VALUE / 2) / TOTAL_MIDGAME_VALUE;
@@ -385,7 +385,7 @@ void PositionStruct::PreEvaluate(void) {
     PreEvalEx.vlCentralThreat[i] = cvlCentralThreat[i];
   }
 
-  // ç„¶ååˆ¤æ–­å„æ–¹æ˜¯å¦å¤„äºè¿›æ”»çŠ¶æ€ï¼Œæ–¹æ³•æ˜¯è®¡ç®—å„ç§è¿‡æ²³æ£‹å­çš„æ•°é‡ï¼ŒæŒ‰ç…§è½¦é©¬2ç‚®å…µ1ç›¸åŠ ã€‚
+  // È»ºóÅĞ¶Ï¸÷·½ÊÇ·ñ´¦ÓÚ½ø¹¥×´Ì¬£¬·½·¨ÊÇ¼ÆËã¸÷ÖÖ¹ıºÓÆå×ÓµÄÊıÁ¿£¬°´ÕÕ³µÂí2ÅÚ±ø1Ïà¼Ó¡£
   nWhiteAttacks = nBlackAttacks = 0;
   for (i = SIDE_TAG(0) + KNIGHT_FROM; i <= SIDE_TAG(0) + ROOK_TO; i ++) {
     if (this->ucsqPieces[i] != 0 && BLACK_HALF(this->ucsqPieces[i])) {
@@ -407,7 +407,7 @@ void PositionStruct::PreEvaluate(void) {
       nBlackAttacks ++;
     }
   }
-  // å¦‚æœæœ¬æ–¹è½»å­æ•°æ¯”å¯¹æ–¹å¤šï¼Œé‚£ä¹ˆæ¯å¤šä¸€ä¸ªè½»å­(è½¦ç®—2ä¸ªè½»å­)å¨èƒå€¼åŠ 2ã€‚å¨èƒå€¼æœ€å¤šä¸è¶…è¿‡8ã€‚
+  // Èç¹û±¾·½Çá×ÓÊı±È¶Ô·½¶à£¬ÄÇÃ´Ã¿¶àÒ»¸öÇá×Ó(³µËã2¸öÇá×Ó)ÍşĞ²Öµ¼Ó2¡£ÍşĞ²Öµ×î¶à²»³¬¹ı8¡£
   nWhiteSimpleValue = PopCnt16(this->wBitPiece[0] & ROOK_BITPIECE) * 2 + PopCnt16(this->wBitPiece[0] & (KNIGHT_BITPIECE | CANNON_BITPIECE));
   nBlackSimpleValue = PopCnt16(this->wBitPiece[1] & ROOK_BITPIECE) * 2 + PopCnt16(this->wBitPiece[1] & (KNIGHT_BITPIECE | CANNON_BITPIECE));
   if (nWhiteSimpleValue > nBlackSimpleValue) {
@@ -415,8 +415,8 @@ void PositionStruct::PreEvaluate(void) {
   } else {
     nBlackAttacks += (nBlackSimpleValue - nWhiteSimpleValue) * 2;
   }
-  nWhiteAttacks = Min(nWhiteAttacks, TOTAL_ATTACK_VALUE);
-  nBlackAttacks = Min(nBlackAttacks, TOTAL_ATTACK_VALUE);
+  nWhiteAttacks = MIN(nWhiteAttacks, TOTAL_ATTACK_VALUE);
+  nBlackAttacks = MIN(nBlackAttacks, TOTAL_ATTACK_VALUE);
   PreEvalEx.vlBlackAdvisorLeakage = TOTAL_ADVISOR_LEAKAGE * nWhiteAttacks / TOTAL_ATTACK_VALUE;
   PreEvalEx.vlWhiteAdvisorLeakage = TOTAL_ADVISOR_LEAKAGE * nBlackAttacks / TOTAL_ATTACK_VALUE;
   __ASSERT_BOUND(0, nWhiteAttacks, TOTAL_ATTACK_VALUE);
@@ -440,7 +440,7 @@ void PositionStruct::PreEvaluate(void) {
     PreEvalEx.vlBlackBottomThreat[i] = cvlBottomThreat[i] * nWhiteAttacks / TOTAL_ATTACK_VALUE;
   }
 
-  // æ£€æŸ¥é¢„è¯„ä»·æ˜¯å¦å¯¹ç§°
+  // ¼ì²éÔ¤ÆÀ¼ÛÊÇ·ñ¶Ô³Æ
 #ifndef NDEBUG
   for (sq = 0; sq < 256; sq ++) {
     if (IN_BOARD(sq)) {
@@ -456,15 +456,15 @@ void PositionStruct::PreEvaluate(void) {
   }
 #endif
 
-  // è°ƒæ•´ä¸å—å¨èƒæ–¹å°‘æ‰çš„ä»•(å£«)ç›¸(è±¡)åˆ†å€¼
+  // µ÷Õû²»ÊÜÍşĞ²·½ÉÙµôµÄÊË(Ê¿)Ïà(Ïó)·ÖÖµ
   this->vlWhite = ADVISOR_BISHOP_ATTACKLESS_VALUE * (TOTAL_ATTACK_VALUE - nBlackAttacks) / TOTAL_ATTACK_VALUE;
   this->vlBlack = ADVISOR_BISHOP_ATTACKLESS_VALUE * (TOTAL_ATTACK_VALUE - nWhiteAttacks) / TOTAL_ATTACK_VALUE;
-  // å¦‚æœå…è®¸å‡å˜ï¼Œé‚£ä¹ˆä¸å—å¨èƒçš„ä»•(å£«)ç›¸(è±¡)åˆ†å€¼å°±å°‘äº†ä¸€åŠ
+  // Èç¹ûÔÊĞíÉı±ä£¬ÄÇÃ´²»ÊÜÍşĞ²µÄÊË(Ê¿)Ïà(Ïó)·ÖÖµ¾ÍÉÙÁËÒ»°ë
   if (PreEval.bPromotion) {
     this->vlWhite /= 2;
     this->vlBlack /= 2;
   }
-  // æœ€åé‡æ–°è®¡ç®—å­åŠ›ä½ç½®åˆ†
+  // ×îºóÖØĞÂ¼ÆËã×ÓÁ¦Î»ÖÃ·Ö
   for (i = 16; i < 32; i ++) {
     sq = this->ucsqPieces[i];
     if (sq != 0) {

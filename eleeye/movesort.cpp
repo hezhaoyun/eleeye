@@ -20,18 +20,18 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "base.h"
+#include "../base/base.h"
 #include "position.h"
 #include "movesort.h"
 
-int nHistory[65536]; // åŽ†å²è¡¨
+int nHistory[65536]; // ÀúÊ·±í
 
-// æ ¹æ®åŽ†å²è¡¨å¯¹ç€æ³•åˆ—è¡¨èµ‹å€¼
+// ¸ù¾ÝÀúÊ·±í¶Ô×Å·¨ÁÐ±í¸³Öµ
 void MoveSortStruct::SetHistory(void) {
   int i, j, vl, nShift, nNewShift;
   nShift = 0;
   for (i = nMoveIndex; i < nMoveNum; i ++) {
-    // å¦‚æžœç€æ³•çš„åˆ†å€¼è¶…è¿‡65536ï¼Œå°±å¿…éœ€å¯¹æ‰€æœ‰ç€æ³•çš„åˆ†å€¼ä½œç¼©å‡ï¼Œä½¿å®ƒä»¬éƒ½ä¸è¶…è¿‡65536
+    // Èç¹û×Å·¨µÄ·ÖÖµ³¬¹ý65536£¬¾Í±ØÐè¶ÔËùÓÐ×Å·¨µÄ·ÖÖµ×÷Ëõ¼õ£¬Ê¹ËüÃÇ¶¼²»³¬¹ý65536
     vl = nHistory[mvs[i].wmv] >> nShift;
     if (vl > 65535) {
       nNewShift = Bsr(vl) - 15;
@@ -46,7 +46,7 @@ void MoveSortStruct::SetHistory(void) {
   }
 }
 
-// ShellæŽ’åºæ³•ï¼Œè¿™é‡Œç”¨"1, 4, 13, 40 ..."çš„åºåˆ—ï¼Œè¿™æ ·è¦æ¯”"1, 2, 4, 8, ..."å¥½
+// ShellÅÅÐò·¨£¬ÕâÀïÓÃ"1, 4, 13, 40 ..."µÄÐòÁÐ£¬ÕâÑùÒª±È"1, 2, 4, 8, ..."ºÃ
 static const int cnShellStep[8] = {0, 1, 4, 13, 40, 121, 364, 1093};
 
 void MoveSortStruct::ShellSort(void) {
@@ -72,13 +72,13 @@ void MoveSortStruct::ShellSort(void) {
   }
 }
 
-/* ç”Ÿæˆè§£å°†ç€æ³•ï¼Œè¿”å›žå”¯ä¸€åº”å°†ç€æ³•(æœ‰å¤šä¸ªåº”å°†ç€æ³•åˆ™è¿”å›žé›¶)
+/* Éú³É½â½«×Å·¨£¬·µ»ØÎ¨Ò»Ó¦½«×Å·¨(ÓÐ¶à¸öÓ¦½«×Å·¨Ôò·µ»ØÁã)
  * 
- * è§£å°†ç€æ³•çš„é¡ºåºå¦‚ä¸‹ï¼š
- * 1. ç½®æ¢è¡¨ç€æ³•(SORT_VALUE_MAX)ï¼›
- * 2. ä¸¤ä¸ªæ€æ‰‹ç€æ³•(SORT_VALUE_MAX - 1æˆ–2)ï¼›
- * 3. å…¶ä»–ç€æ³•ï¼ŒæŒ‰åŽ†å²è¡¨æŽ’åº(ä»Ž1åˆ°SORT_VALUE_MAX - 3)ï¼›
- * 4. ä¸èƒ½è§£å°†çš„ç€æ³•(0)ï¼Œè¿™äº›ç€æ³•ä¼šè¿‡æ»¤æŽ‰ã€‚
+ * ½â½«×Å·¨µÄË³ÐòÈçÏÂ£º
+ * 1. ÖÃ»»±í×Å·¨(SORT_VALUE_MAX)£»
+ * 2. Á½¸öÉ±ÊÖ×Å·¨(SORT_VALUE_MAX - 1»ò2)£»
+ * 3. ÆäËû×Å·¨£¬°´ÀúÊ·±íÅÅÐò(´Ó1µ½SORT_VALUE_MAX - 3)£»
+ * 4. ²»ÄÜ½â½«µÄ×Å·¨(0)£¬ÕâÐ©×Å·¨»á¹ýÂËµô¡£
  */
 int MoveSortStruct::InitEvade(PositionStruct &pos, int mv, const uint16_t *lpwmvKiller) {
   int i, nLegal;
@@ -99,7 +99,7 @@ int MoveSortStruct::InitEvade(PositionStruct &pos, int mv, const uint16_t *lpwmv
       } else if (mvs[i].wmv == lpwmvKiller[1]) {
         mvs[i].wvl = SORT_VALUE_MAX - 2;
       } else {
-        mvs[i].wvl = Min(mvs[i].wvl + 1, SORT_VALUE_MAX - 3);
+        mvs[i].wvl = MIN(mvs[i].wvl + 1, SORT_VALUE_MAX - 3);
       }
     } else {
       mvs[i].wvl = 0;
@@ -110,72 +110,72 @@ int MoveSortStruct::InitEvade(PositionStruct &pos, int mv, const uint16_t *lpwmv
   return (nLegal == 1 ? mvs[0].wmv : 0);
 }
 
-// ç»™å‡ºä¸‹ä¸€ä¸ªå³å°†æœç´¢çš„ç€æ³•
+// ¸ø³öÏÂÒ»¸ö¼´½«ËÑË÷µÄ×Å·¨
 int MoveSortStruct::NextFull(const PositionStruct &pos) {
   switch (nPhase) {
-  // "nPhase"è¡¨ç¤ºç€æ³•å¯å‘çš„è‹¥å¹²é˜¶æ®µï¼Œä¾æ¬¡ä¸ºï¼š
+  // "nPhase"±íÊ¾×Å·¨Æô·¢µÄÈô¸É½×¶Î£¬ÒÀ´ÎÎª£º
 
-  // 0. ç½®æ¢è¡¨ç€æ³•å¯å‘ï¼Œå®ŒæˆåŽç«‹å³è¿›å…¥ä¸‹ä¸€é˜¶æ®µï¼›
+  // 0. ÖÃ»»±í×Å·¨Æô·¢£¬Íê³ÉºóÁ¢¼´½øÈëÏÂÒ»½×¶Î£»
   case PHASE_HASH:
     nPhase = PHASE_GEN_CAP;
     if (mvHash != 0) {
       __ASSERT(pos.LegalMove(mvHash));
       return mvHash;
     }
-    // æŠ€å·§ï¼šè¿™é‡Œæ²¡æœ‰"break"ï¼Œè¡¨ç¤º"switch"çš„ä¸Šä¸€ä¸ª"case"æ‰§è¡Œå®ŒåŽç´§æŽ¥ç€åšä¸‹ä¸€ä¸ª"case"ï¼Œä¸‹åŒ
+    // ¼¼ÇÉ£ºÕâÀïÃ»ÓÐ"break"£¬±íÊ¾"switch"µÄÉÏÒ»¸ö"case"Ö´ÐÐÍêºó½ô½Ó×Å×öÏÂÒ»¸ö"case"£¬ÏÂÍ¬
 
-  // 1. ç”Ÿæˆæ‰€æœ‰åƒå­ç€æ³•ï¼Œå®ŒæˆåŽç«‹å³è¿›å…¥ä¸‹ä¸€é˜¶æ®µï¼›
+  // 1. Éú³ÉËùÓÐ³Ô×Ó×Å·¨£¬Íê³ÉºóÁ¢¼´½øÈëÏÂÒ»½×¶Î£»
   case PHASE_GEN_CAP:
     nPhase = PHASE_GOODCAP;
     nMoveIndex = 0;
     nMoveNum = pos.GenCapMoves(mvs);
     ShellSort();
 
-  // 2. MVV(LVA)å¯å‘ï¼Œå¯èƒ½è¦å¾ªçŽ¯è‹¥å¹²æ¬¡ï¼›
+  // 2. MVV(LVA)Æô·¢£¬¿ÉÄÜÒªÑ­»·Èô¸É´Î£»
   case PHASE_GOODCAP:
     if (nMoveIndex < nMoveNum && mvs[nMoveIndex].wvl > 1) {
-      // æ³¨æ„ï¼šMVV(LVA)å€¼ä¸è¶…è¿‡1ï¼Œåˆ™è¯´æ˜Žåƒå­ä¸æ˜¯ç›´æŽ¥èƒ½èŽ·å¾—ä¼˜åŠ¿çš„ï¼Œè¿™äº›ç€æ³•å°†ç•™åœ¨ä»¥åŽæœç´¢
+      // ×¢Òâ£ºMVV(LVA)Öµ²»³¬¹ý1£¬ÔòËµÃ÷³Ô×Ó²»ÊÇÖ±½ÓÄÜ»ñµÃÓÅÊÆµÄ£¬ÕâÐ©×Å·¨½«ÁôÔÚÒÔºóËÑË÷
       nMoveIndex ++;
       __ASSERT_PIECE(pos.ucpcSquares[DST(mvs[nMoveIndex - 1].wmv)]);
       return mvs[nMoveIndex - 1].wmv;
     }
 
-  // 3. æ€æ‰‹ç€æ³•å¯å‘(ç¬¬ä¸€ä¸ªæ€æ‰‹ç€æ³•)ï¼Œå®ŒæˆåŽç«‹å³è¿›å…¥ä¸‹ä¸€é˜¶æ®µï¼›
+  // 3. É±ÊÖ×Å·¨Æô·¢(µÚÒ»¸öÉ±ÊÖ×Å·¨)£¬Íê³ÉºóÁ¢¼´½øÈëÏÂÒ»½×¶Î£»
   case PHASE_KILLER1:
     nPhase = PHASE_KILLER2;
     if (mvKiller1 != 0 && pos.LegalMove(mvKiller1)) {
-      // æ³¨æ„ï¼šæ€æ‰‹ç€æ³•å¿…é¡»æ£€éªŒç€æ³•åˆç†æ€§ï¼Œä¸‹åŒ
+      // ×¢Òâ£ºÉ±ÊÖ×Å·¨±ØÐë¼ìÑé×Å·¨ºÏÀíÐÔ£¬ÏÂÍ¬
       return mvKiller1;
     }
 
-  // 4. æ€æ‰‹ç€æ³•å¯å‘(ç¬¬äºŒä¸ªæ€æ‰‹ç€æ³•)ï¼Œå®ŒæˆåŽç«‹å³è¿›å…¥ä¸‹ä¸€é˜¶æ®µï¼›
+  // 4. É±ÊÖ×Å·¨Æô·¢(µÚ¶þ¸öÉ±ÊÖ×Å·¨)£¬Íê³ÉºóÁ¢¼´½øÈëÏÂÒ»½×¶Î£»
   case PHASE_KILLER2:
     nPhase = PHASE_GEN_NONCAP;
     if (mvKiller2 != 0 && pos.LegalMove(mvKiller2)) {
       return mvKiller2;
     }
 
-  // 5. ç”Ÿæˆæ‰€æœ‰ä¸åƒå­ç€æ³•ï¼Œå®ŒæˆåŽç«‹å³è¿›å…¥ä¸‹ä¸€é˜¶æ®µï¼›
+  // 5. Éú³ÉËùÓÐ²»³Ô×Ó×Å·¨£¬Íê³ÉºóÁ¢¼´½øÈëÏÂÒ»½×¶Î£»
   case PHASE_GEN_NONCAP:
     nPhase = PHASE_REST;
     nMoveNum += pos.GenNonCapMoves(mvs + nMoveNum);
     SetHistory();
     ShellSort();
 
-  // 6. å¯¹å‰©ä½™ç€æ³•åšåŽ†å²è¡¨å¯å‘(åŒ…æ‹¬è¿”å›žè§£å°†ç€æ³•)ï¼›
+  // 6. ¶ÔÊ£Óà×Å·¨×öÀúÊ·±íÆô·¢(°üÀ¨·µ»Ø½â½«×Å·¨)£»
   case PHASE_REST:
     if (nMoveIndex < nMoveNum) {
       nMoveIndex ++;
       return mvs[nMoveIndex - 1].wmv;
     }
 
-  // 7. æ²¡æœ‰ç€æ³•äº†ï¼Œè¿”å›žé›¶ã€‚
+  // 7. Ã»ÓÐ×Å·¨ÁË£¬·µ»ØÁã¡£
   default:
     return 0;
   }
 }
 
-// ç”Ÿæˆæ ¹ç»“ç‚¹çš„ç€æ³•
+// Éú³É¸ù½áµãµÄ×Å·¨
 void MoveSortStruct::InitRoot(const PositionStruct &pos, int nBanMoves, const uint16_t *lpwmvBanList) {
   int i, j, nBanned;
   nMoveIndex = 0;
@@ -195,7 +195,7 @@ void MoveSortStruct::InitRoot(const PositionStruct &pos, int nBanMoves, const ui
   nMoveNum -= nBanned;
 }
 
-// æ›´æ–°æ ¹ç»“ç‚¹çš„ç€æ³•æŽ’åºåˆ—è¡¨
+// ¸üÐÂ¸ù½áµãµÄ×Å·¨ÅÅÐòÁÐ±í
 void MoveSortStruct::UpdateRoot(int mv) {
   int i;
   for (i = 0; i < nMoveNum; i ++) {

@@ -20,37 +20,37 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "base.h"
+#include "../base/base.h"
 #include "pregen.h"
 #include "position.h"
 
-/* ElephantEyeæºç¨‹åºä½¿ç”¨çš„åŒˆç‰™åˆ©è®°å·çº¦å®šï¼š
+/* ElephantEyeÔ´³ÌĞòÊ¹ÓÃµÄĞÙÑÀÀû¼ÇºÅÔ¼¶¨£º
  *
- * sq: æ ¼å­åºå·(æ•´æ•°ï¼Œä»0åˆ°255ï¼Œå‚é˜…"pregen.cpp")
- * pc: æ£‹å­åºå·(æ•´æ•°ï¼Œä»0åˆ°47ï¼Œå‚é˜…"position.cpp")
- * pt: æ£‹å­ç±»å‹åºå·(æ•´æ•°ï¼Œä»0åˆ°6ï¼Œå‚é˜…"position.cpp")
- * mv: ç€æ³•(æ•´æ•°ï¼Œä»0åˆ°65535ï¼Œå‚é˜…"position.cpp")
- * sd: èµ°å­æ–¹(æ•´æ•°ï¼Œ0ä»£è¡¨çº¢æ–¹ï¼Œ1ä»£è¡¨é»‘æ–¹)
- * vl: å±€é¢ä»·å€¼(æ•´æ•°ï¼Œä»"-MATE_VALUE"åˆ°"MATE_VALUE"ï¼Œå‚é˜…"position.cpp")
- * (æ³¨ï¼šä»¥ä¸Šäº”ä¸ªè®°å·å¯ä¸ucã€dwç­‰ä»£è¡¨æ•´æ•°çš„è®°å·é…åˆä½¿ç”¨)
- * pos: å±€é¢(PositionStructç±»å‹ï¼Œå‚é˜…"position.h")
- * sms: ä½è¡Œå’Œä½åˆ—çš„ç€æ³•ç”Ÿæˆé¢„ç½®ç»“æ„(å‚é˜…"pregen.h")
- * smv: ä½è¡Œå’Œä½åˆ—çš„ç€æ³•åˆ¤æ–­é¢„ç½®ç»“æ„(å‚é˜…"pregen.h")
+ * sq: ¸ñ×ÓĞòºÅ(ÕûÊı£¬´Ó0µ½255£¬²ÎÔÄ"pregen.cpp")
+ * pc: Æå×ÓĞòºÅ(ÕûÊı£¬´Ó0µ½47£¬²ÎÔÄ"position.cpp")
+ * pt: Æå×ÓÀàĞÍĞòºÅ(ÕûÊı£¬´Ó0µ½6£¬²ÎÔÄ"position.cpp")
+ * mv: ×Å·¨(ÕûÊı£¬´Ó0µ½65535£¬²ÎÔÄ"position.cpp")
+ * sd: ×ß×Ó·½(ÕûÊı£¬0´ú±íºì·½£¬1´ú±íºÚ·½)
+ * vl: ¾ÖÃæ¼ÛÖµ(ÕûÊı£¬´Ó"-MATE_VALUE"µ½"MATE_VALUE"£¬²ÎÔÄ"position.cpp")
+ * (×¢£ºÒÔÉÏÎå¸ö¼ÇºÅ¿ÉÓëuc¡¢dwµÈ´ú±íÕûÊıµÄ¼ÇºÅÅäºÏÊ¹ÓÃ)
+ * pos: ¾ÖÃæ(PositionStructÀàĞÍ£¬²ÎÔÄ"position.h")
+ * sms: Î»ĞĞºÍÎ»ÁĞµÄ×Å·¨Éú³ÉÔ¤ÖÃ½á¹¹(²ÎÔÄ"pregen.h")
+ * smv: Î»ĞĞºÍÎ»ÁĞµÄ×Å·¨ÅĞ¶ÏÔ¤ÖÃ½á¹¹(²ÎÔÄ"pregen.h")
  */
 
-// æœ¬æ¨¡å—æ¶‰åŠå¤šä¸ª"PositionStruct"çš„æˆå‘˜ï¼Œç”¨"this->"æ ‡è®°å‡ºæ¥ä»¥æ–¹ä¾¿è¾¨è®¤
+// ±¾Ä£¿éÉæ¼°¶à¸ö"PositionStruct"µÄ³ÉÔ±£¬ÓÃ"this->"±ê¼Ç³öÀ´ÒÔ·½±ã±æÈÏ
 
-// èµ·å§‹å±€é¢çš„FENä¸²
+// ÆğÊ¼¾ÖÃæµÄFEN´®
 const char *const cszStartFen = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w";
 
-// æ£‹å­ç±»å‹å¯¹åº”çš„æ£‹å­ç¬¦å·
+// Æå×ÓÀàĞÍ¶ÔÓ¦µÄÆå×Ó·ûºÅ
 const char *const cszPieceBytes = "KABNRCP";
 
-/* æ£‹å­åºå·å¯¹åº”çš„æ£‹å­ç±»å‹
+/* Æå×ÓĞòºÅ¶ÔÓ¦µÄÆå×ÓÀàĞÍ
  *
- * ElephantEyeçš„æ£‹å­åºå·ä»0åˆ°47ï¼Œå…¶ä¸­0åˆ°15ä¸ç”¨ï¼Œ16åˆ°31è¡¨ç¤ºçº¢å­ï¼Œ32åˆ°47è¡¨ç¤ºé»‘å­ã€‚
- * æ¯æ–¹çš„æ£‹å­é¡ºåºä¾æ¬¡æ˜¯ï¼šå¸…ä»•ä»•ç›¸ç›¸é©¬é©¬è½¦è½¦ç‚®ç‚®å…µå…µå…µå…µå…µ(å°†å£«å£«è±¡è±¡é©¬é©¬è½¦è½¦ç‚®ç‚®å’å’å’å’å’)
- * æç¤ºï¼šåˆ¤æ–­æ£‹å­æ˜¯çº¢å­ç”¨"pc < 32"ï¼Œé»‘å­ç”¨"pc >= 32"
+ * ElephantEyeµÄÆå×ÓĞòºÅ´Ó0µ½47£¬ÆäÖĞ0µ½15²»ÓÃ£¬16µ½31±íÊ¾ºì×Ó£¬32µ½47±íÊ¾ºÚ×Ó¡£
+ * Ã¿·½µÄÆå×ÓË³ĞòÒÀ´ÎÊÇ£ºË§ÊËÊËÏàÏàÂíÂí³µ³µÅÚÅÚ±ø±ø±ø±ø±ø(½«Ê¿Ê¿ÏóÏóÂíÂí³µ³µÅÚÅÚ×ä×ä×ä×ä×ä)
+ * ÌáÊ¾£ºÅĞ¶ÏÆå×ÓÊÇºì×ÓÓÃ"pc < 32"£¬ºÚ×ÓÓÃ"pc >= 32"
  */
 const int cnPieceTypes[48] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -58,14 +58,14 @@ const int cnPieceTypes[48] = {
   0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6
 };
 
-// æ£‹å­çš„ç®€å•åˆ†å€¼ï¼Œåªåœ¨ç®€å•æ¯”è¾ƒæ—¶ä½œå‚è€ƒ
+// Æå×ÓµÄ¼òµ¥·ÖÖµ£¬Ö»ÔÚ¼òµ¥±È½ÏÊ±×÷²Î¿¼
 const int cnSimpleValues[48] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   5, 1, 1, 1, 1, 3, 3, 4, 4, 3, 3, 2, 2, 2, 2, 2,
   5, 1, 1, 1, 1, 3, 3, 4, 4, 3, 3, 2, 2, 2, 2, 2,
 };
 
-// è¯¥æ•°ç»„å¾ˆæ–¹ä¾¿åœ°å®ç°äº†åæ ‡çš„é•œåƒ(å·¦å³å¯¹ç§°)
+// ¸ÃÊı×éºÜ·½±ãµØÊµÏÖÁË×ø±êµÄ¾µÏñ(×óÓÒ¶Ô³Æ)
 const uint8_t cucsqMirrorTab[256] = {
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
@@ -85,7 +85,7 @@ const uint8_t cucsqMirrorTab[256] = {
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
 };
 
-// FENä¸²ä¸­æ£‹å­æ ‡è¯†ï¼Œæ³¨æ„è¿™ä¸ªå‡½æ•°åªèƒ½è¯†åˆ«å¤§å†™å­—æ¯ï¼Œå› æ­¤ç”¨å°å†™å­—æ¯æ—¶ï¼Œé¦–å…ˆå¿…é¡»è½¬æ¢ä¸ºå¤§å†™
+// FEN´®ÖĞÆå×Ó±êÊ¶£¬×¢ÒâÕâ¸öº¯ÊıÖ»ÄÜÊ¶±ğ´óĞ´×ÖÄ¸£¬Òò´ËÓÃĞ¡Ğ´×ÖÄ¸Ê±£¬Ê×ÏÈ±ØĞë×ª»»Îª´óĞ´
 int FenPiece(int nArg) {
   switch (nArg) {
   case 'K':
@@ -109,9 +109,9 @@ int FenPiece(int nArg) {
   }
 }
 
-// ä»¥ä¸‹æ˜¯ä¸€äº›æ£‹ç›˜å¤„ç†è¿‡ç¨‹
+// ÒÔÏÂÊÇÒ»Ğ©ÆåÅÌ´¦Àí¹ı³Ì
 
-// æ£‹ç›˜ä¸Šå¢åŠ æ£‹å­
+// ÆåÅÌÉÏÔö¼ÓÆå×Ó
 void PositionStruct::AddPiece(int sq, int pc, bool bDel) {
   int pt;
 
@@ -148,13 +148,13 @@ void PositionStruct::AddPiece(int sq, int pc, bool bDel) {
   this->zobr.Xor(PreGen.zobrTable[pt][sq]);
 }
 
-// ç§»åŠ¨æ£‹å­
+// ÒÆ¶¯Æå×Ó
 int PositionStruct::MovePiece(int mv) {
   int sqSrc, sqDst, pcMoved, pcCaptured, pt;
   uint8_t *lpucvl;
-  // ç§»åŠ¨æ£‹å­åŒ…æ‹¬ä»¥ä¸‹å‡ ä¸ªæ­¥éª¤ï¼š
+  // ÒÆ¶¯Æå×Ó°üÀ¨ÒÔÏÂ¼¸¸ö²½Öè£º
 
-  // 1. å¾—åˆ°ç§»åŠ¨çš„æ£‹å­åºå·å’Œè¢«åƒçš„æ£‹å­åºå·ï¼›
+  // 1. µÃµ½ÒÆ¶¯µÄÆå×ÓĞòºÅºÍ±»³ÔµÄÆå×ÓĞòºÅ£»
   sqSrc = SRC(mv);
   sqDst = DST(mv);
   pcMoved = this->ucpcSquares[sqSrc];
@@ -164,8 +164,8 @@ int PositionStruct::MovePiece(int mv) {
   pcCaptured = this->ucpcSquares[sqDst];
   if (pcCaptured == 0) {
 
-    // 2. å¦‚æœæ²¡æœ‰è¢«åƒçš„æ£‹å­ï¼Œé‚£ä¹ˆæ›´æ–°ç›®æ ‡æ ¼çš„ä½è¡Œå’Œä½åˆ—ã€‚
-    //    æ¢å¥è¯è¯´ï¼Œæœ‰è¢«åƒçš„æ£‹å­ï¼Œç›®æ ‡æ ¼çš„ä½è¡Œå’Œä½åˆ—å°±ä¸å¿…æ›´æ–°äº†ã€‚
+    // 2. Èç¹ûÃ»ÓĞ±»³ÔµÄÆå×Ó£¬ÄÇÃ´¸üĞÂÄ¿±ê¸ñµÄÎ»ĞĞºÍÎ»ÁĞ¡£
+    //    »»¾ä»°Ëµ£¬ÓĞ±»³ÔµÄÆå×Ó£¬Ä¿±ê¸ñµÄÎ»ĞĞºÍÎ»ÁĞ¾Í²»±Ø¸üĞÂÁË¡£
     this->wBitRanks[RANK_Y(sqDst)] ^= PreGen.wBitRankMask[sqDst];
     this->wBitFiles[FILE_X(sqDst)] ^= PreGen.wBitFileMask[sqDst];
     __ASSERT_BITRANK(this->wBitRanks[RANK_Y(sqDst)]);
@@ -173,8 +173,8 @@ int PositionStruct::MovePiece(int mv) {
   } else {
 
     __ASSERT_PIECE(pcCaptured);
-    // 3. å¦‚æœæœ‰è¢«åƒçš„æ£‹å­ï¼Œé‚£ä¹ˆæ›´æ–°æ£‹å­ä½ï¼Œä»"ucsqPieces"æ•°ç»„ä¸­æ¸…é™¤è¢«åƒæ£‹å­
-    //    åŒæ—¶æ›´æ–°å­åŠ›ä»·å€¼ã€ä½è¡Œä½åˆ—ã€Zobristé”®å€¼å’Œæ ¡éªŒé”
+    // 3. Èç¹ûÓĞ±»³ÔµÄÆå×Ó£¬ÄÇÃ´¸üĞÂÆå×ÓÎ»£¬´Ó"ucsqPieces"Êı×éÖĞÇå³ı±»³ÔÆå×Ó
+    //    Í¬Ê±¸üĞÂ×ÓÁ¦¼ÛÖµ¡¢Î»ĞĞÎ»ÁĞ¡¢Zobrist¼üÖµºÍĞ£ÑéËø
     this->ucsqPieces[pcCaptured] = 0;
     this->dwBitPiece ^= BIT_PIECE(pcCaptured);
     pt = PIECE_TYPE(pcCaptured);
@@ -188,8 +188,8 @@ int PositionStruct::MovePiece(int mv) {
     this->zobr.Xor(PreGen.zobrTable[pt][sqDst]);
   }
 
-  // 4. ä»"ucpcSquares"å’Œ"ucsqPieces"æ•°ç»„ä¸­ç§»åŠ¨æ£‹å­ï¼Œæ³¨æ„â€œæ ¼å­-æ£‹å­è”ç³»æ•°ç»„â€ç§»åŠ¨æ£‹å­çš„æ–¹æ³•
-  //    åŒæ—¶æ›´æ–°ä½è¡Œã€ä½åˆ—ã€å­åŠ›ä»·å€¼ã€ä½è¡Œä½åˆ—ã€Zobristé”®å€¼å’Œæ ¡éªŒé”
+  // 4. ´Ó"ucpcSquares"ºÍ"ucsqPieces"Êı×éÖĞÒÆ¶¯Æå×Ó£¬×¢Òâ¡°¸ñ×Ó-Æå×ÓÁªÏµÊı×é¡±ÒÆ¶¯Æå×ÓµÄ·½·¨
+  //    Í¬Ê±¸üĞÂÎ»ĞĞ¡¢Î»ÁĞ¡¢×ÓÁ¦¼ÛÖµ¡¢Î»ĞĞÎ»ÁĞ¡¢Zobrist¼üÖµºÍĞ£ÑéËø
   this->ucpcSquares[sqSrc] = 0;
   this->ucpcSquares[sqDst] = pcMoved;
   this->ucsqPieces[pcMoved] = sqDst;
@@ -211,7 +211,7 @@ int PositionStruct::MovePiece(int mv) {
   return pcCaptured;
 }
 
-// æ’¤æ¶ˆç§»åŠ¨æ£‹å­
+// ³·ÏûÒÆ¶¯Æå×Ó
 void PositionStruct::UndoMovePiece(int mv, int pcCaptured) {
   int sqSrc, sqDst, pcMoved;
   sqSrc = SRC(mv);
@@ -240,12 +240,12 @@ void PositionStruct::UndoMovePiece(int mv, int pcCaptured) {
   }
 }
 
-// å‡å˜
+// Éı±ä
 int PositionStruct::Promote(int sq) {
   int pcCaptured, pcPromoted, pt;
-  // å‡å˜åŒ…æ‹¬ä»¥ä¸‹å‡ ä¸ªæ­¥éª¤ï¼š
+  // Éı±ä°üÀ¨ÒÔÏÂ¼¸¸ö²½Öè£º
 
-  // 1. å¾—åˆ°å‡å˜å‰æ£‹å­çš„åºå·ï¼›
+  // 1. µÃµ½Éı±äÇ°Æå×ÓµÄĞòºÅ£»
   __ASSERT_SQUARE(sq);
   __ASSERT(CanPromote());
   __ASSERT(CAN_PROMOTE(sq));
@@ -255,7 +255,7 @@ int PositionStruct::Promote(int sq) {
   __ASSERT_PIECE(pcPromoted);
   __ASSERT(this->ucsqPieces[pcPromoted] == 0);
 
-  // 2. å»æ‰å‡å˜å‰æ£‹å­ï¼ŒåŒæ—¶æ›´æ–°å­åŠ›ä»·å€¼ã€Zobristé”®å€¼å’Œæ ¡éªŒé”
+  // 2. È¥µôÉı±äÇ°Æå×Ó£¬Í¬Ê±¸üĞÂ×ÓÁ¦¼ÛÖµ¡¢Zobrist¼üÖµºÍĞ£ÑéËø
   this->dwBitPiece ^= BIT_PIECE(pcPromoted) ^ BIT_PIECE(pcCaptured);
   this->ucsqPieces[pcCaptured] = 0;
   pt = PIECE_TYPE(pcCaptured);
@@ -268,7 +268,7 @@ int PositionStruct::Promote(int sq) {
   __ASSERT_BOUND(0, pt, 13);
   this->zobr.Xor(PreGen.zobrTable[pt][sq]);
 
-  // 3. åŠ ä¸Šå‡å˜åæ£‹å­ï¼ŒåŒæ—¶æ›´æ–°å­åŠ›ä»·å€¼ã€Zobristé”®å€¼å’Œæ ¡éªŒé”
+  // 3. ¼ÓÉÏÉı±äºóÆå×Ó£¬Í¬Ê±¸üĞÂ×ÓÁ¦¼ÛÖµ¡¢Zobrist¼üÖµºÍĞ£ÑéËø
   this->ucpcSquares[sq] = pcPromoted;
   this->ucsqPieces[pcPromoted] = sq;
   pt = PIECE_TYPE(pcPromoted);
@@ -283,7 +283,7 @@ int PositionStruct::Promote(int sq) {
   return pcCaptured;
 }
 
-// æ’¤æ¶ˆå‡å˜
+// ³·ÏûÉı±ä
 void PositionStruct::UndoPromote(int sq, int pcCaptured) {
   int pcPromoted;
   __ASSERT_SQUARE(sq);
@@ -296,35 +296,35 @@ void PositionStruct::UndoPromote(int sq, int pcCaptured) {
   this->dwBitPiece ^= BIT_PIECE(pcPromoted) ^ BIT_PIECE(pcCaptured);
 }
 
-// ä»¥ä¸Šæ˜¯ä¸€äº›æ£‹ç›˜å¤„ç†è¿‡ç¨‹
+// ÒÔÉÏÊÇÒ»Ğ©ÆåÅÌ´¦Àí¹ı³Ì
 
-// ä»¥ä¸‹æ˜¯ä¸€äº›ç€æ³•å¤„ç†è¿‡ç¨‹
+// ÒÔÏÂÊÇÒ»Ğ©×Å·¨´¦Àí¹ı³Ì
 
-// æ‰§è¡Œä¸€ä¸ªç€æ³•
+// Ö´ĞĞÒ»¸ö×Å·¨
 bool PositionStruct::MakeMove(int mv) {
   int sq, pcCaptured;
   uint32_t dwOldZobristKey;
   RollbackStruct *lprbs;
 
-  // å¦‚æœè¾¾åˆ°æœ€å¤§ç€æ³•æ•°ï¼Œé‚£ä¹ˆåˆ¤å®šä¸ºéæ³•ç€æ³•
+  // Èç¹û´ïµ½×î´ó×Å·¨Êı£¬ÄÇÃ´ÅĞ¶¨Îª·Ç·¨×Å·¨
   if (this->nMoveNum == MAX_MOVE_NUM) {
     return false;
   }
   __ASSERT(this->nMoveNum < MAX_MOVE_NUM);
-  // æ‰§è¡Œä¸€ä¸ªç€æ³•è¦åŒ…æ‹¬ä»¥ä¸‹å‡ ä¸ªæ­¥éª¤ï¼š
+  // Ö´ĞĞÒ»¸ö×Å·¨Òª°üÀ¨ÒÔÏÂ¼¸¸ö²½Öè£º
 
-  // 1. ä¿å­˜åŸæ¥çš„Zobristé”®å€¼
+  // 1. ±£´æÔ­À´µÄZobrist¼üÖµ
   dwOldZobristKey = this->zobr.dwKey;
   SaveStatus();
 
-  // 2. ç§»åŠ¨æ£‹å­ï¼Œè®°ä½åƒæ‰çš„å­(å¦‚æœæœ‰çš„è¯)
+  // 2. ÒÆ¶¯Æå×Ó£¬¼Ç×¡³ÔµôµÄ×Ó(Èç¹ûÓĞµÄ»°)
   sq = SRC(mv);
   if (sq == DST(mv)) {
     pcCaptured = Promote(sq);
   } else {
     pcCaptured = MovePiece(mv);
 
-    // 3. å¦‚æœç§»åŠ¨åè¢«å°†å†›äº†ï¼Œé‚£ä¹ˆç€æ³•æ˜¯éæ³•çš„ï¼Œæ’¤æ¶ˆè¯¥ç€æ³•
+    // 3. Èç¹ûÒÆ¶¯ºó±»½«¾üÁË£¬ÄÇÃ´×Å·¨ÊÇ·Ç·¨µÄ£¬³·Ïû¸Ã×Å·¨
     if (CheckedBy(CHECK_LAZY) > 0) {
       UndoMovePiece(mv, pcCaptured);
       Rollback();
@@ -332,20 +332,20 @@ bool PositionStruct::MakeMove(int mv) {
     }
   }
 
-  // 4. äº¤æ¢èµ°å­æ–¹
+  // 4. ½»»»×ß×Ó·½
   ChangeSide();
 
-  // 5. æŠŠåŸæ¥çš„Zobristé”®å€¼è®°å½•åˆ°æ£€æµ‹é‡å¤çš„è¿·ä½ ç½®æ¢è¡¨ä¸­
+  // 5. °ÑÔ­À´µÄZobrist¼üÖµ¼ÇÂ¼µ½¼ì²âÖØ¸´µÄÃÔÄãÖÃ»»±íÖĞ
   if (this->ucRepHash[dwOldZobristKey & REP_HASH_MASK] == 0) {
     this->ucRepHash[dwOldZobristKey & REP_HASH_MASK] = this->nMoveNum;
   }
 
-  // 6. æŠŠç€æ³•ä¿å­˜åˆ°å†å²ç€æ³•åˆ—è¡¨ä¸­ï¼Œå¹¶è®°ä½åƒæ‰çš„å­å’Œå°†å†›çŠ¶æ€
+  // 6. °Ñ×Å·¨±£´æµ½ÀúÊ·×Å·¨ÁĞ±íÖĞ£¬²¢¼Ç×¡³ÔµôµÄ×ÓºÍ½«¾ü×´Ì¬
   lprbs = this->rbsList + this->nMoveNum;
   lprbs->mvs.wmv = mv;
   lprbs->mvs.ChkChs = CheckedBy();
 
-  // 7. è®¾ç½®å’Œæ£‹ç€æ³•æ•°(å°†å†›å’Œåº”å°†ä¸è®¡å…¥)
+  // 7. ÉèÖÃºÍÆå×Å·¨Êı(½«¾üºÍÓ¦½«²»¼ÆÈë)
   if (pcCaptured == 0) {
     if (lprbs->mvs.ChkChs == 0) {
       lprbs->mvs.ChkChs = -ChasedBy(mv);
@@ -353,7 +353,7 @@ bool PositionStruct::MakeMove(int mv) {
     if (LastMove().CptDrw == -100) {
       lprbs->mvs.CptDrw = -100;
     } else {
-      lprbs->mvs.CptDrw = Min((int) LastMove().CptDrw, 0) - (lprbs->mvs.ChkChs > 0 || LastMove().ChkChs > 0 ? 0 : 1);
+      lprbs->mvs.CptDrw = MIN((int) LastMove().CptDrw, 0) - (lprbs->mvs.ChkChs > 0 || LastMove().ChkChs > 0 ? 0 : 1);
     }
     __ASSERT_BOUND(-100, lprbs->mvs.CptDrw, 0);
   } else {
@@ -366,7 +366,7 @@ bool PositionStruct::MakeMove(int mv) {
   return true;
 }
 
-// æ’¤æ¶ˆä¸€ä¸ªç€æ³•
+// ³·ÏûÒ»¸ö×Å·¨
 void PositionStruct::UndoMakeMove(void) {
   int sq;
   RollbackStruct *lprbs;
@@ -388,7 +388,7 @@ void PositionStruct::UndoMakeMove(void) {
   __ASSERT(this->nMoveNum > 0);
 }
 
-// æ‰§è¡Œä¸€ä¸ªç©ºç€
+// Ö´ĞĞÒ»¸ö¿Õ×Å
 void PositionStruct::NullMove(void) {
   __ASSERT(this->nMoveNum < MAX_MOVE_NUM);
   if (this->ucRepHash[this->zobr.dwKey & REP_HASH_MASK] == 0) {
@@ -401,7 +401,7 @@ void PositionStruct::NullMove(void) {
   this->nDistance ++;
 }
 
-// æ’¤æ¶ˆä¸€ä¸ªç©ºç€
+// ³·ÏûÒ»¸ö¿Õ×Å
 void PositionStruct::UndoNullMove(void) {
   this->nMoveNum --;
   this->nDistance --;
@@ -413,18 +413,18 @@ void PositionStruct::UndoNullMove(void) {
   __ASSERT(this->nMoveNum > 0);
 }
 
-// ä»¥ä¸Šæ˜¯ä¸€äº›ç€æ³•å¤„ç†è¿‡ç¨‹
+// ÒÔÉÏÊÇÒ»Ğ©×Å·¨´¦Àí¹ı³Ì
 
-// ä»¥ä¸‹æ˜¯ä¸€äº›å±€é¢å¤„ç†è¿‡ç¨‹
+// ÒÔÏÂÊÇÒ»Ğ©¾ÖÃæ´¦Àí¹ı³Ì
 
-// FENä¸²è¯†åˆ«
+// FEN´®Ê¶±ğ
 void PositionStruct::FromFen(const char *szFen) {
   int i, j, k;
   int pcWhite[7];
   int pcBlack[7];
   const char *lpFen;
-  // FENä¸²çš„è¯†åˆ«åŒ…æ‹¬ä»¥ä¸‹å‡ ä¸ªæ­¥éª¤ï¼š
-  // 1. åˆå§‹åŒ–ï¼Œæ¸…ç©ºæ£‹ç›˜
+  // FEN´®µÄÊ¶±ğ°üÀ¨ÒÔÏÂ¼¸¸ö²½Öè£º
+  // 1. ³õÊ¼»¯£¬Çå¿ÕÆåÅÌ
   pcWhite[0] = SIDE_TAG(0) + KING_FROM;
   pcWhite[1] = SIDE_TAG(0) + ADVISOR_FROM;
   pcWhite[2] = SIDE_TAG(0) + BISHOP_FROM;
@@ -435,10 +435,10 @@ void PositionStruct::FromFen(const char *szFen) {
   for (i = 0; i < 7; i ++) {
     pcBlack[i] = pcWhite[i] + 16;
   }
-  /* æ•°ç»„"pcWhite[7]"å’Œ"pcBlack[7]"åˆ†åˆ«ä»£è¡¨çº¢æ–¹å’Œé»‘æ–¹æ¯ä¸ªå…µç§å³å°†å æœ‰çš„åºå·ï¼Œ
-   * ä»¥"pcWhite[7]"ä¸ºä¾‹ï¼Œç”±äºæ£‹å­16åˆ°31ä¾æ¬¡ä»£è¡¨â€œå¸…ä»•ä»•ç›¸ç›¸é©¬é©¬è½¦è½¦ç‚®ç‚®å…µå…µå…µå…µå…µâ€ï¼Œ
-   * æ‰€ä»¥æœ€åˆåº”è¯¥æ˜¯"pcWhite[7] = {16, 17, 19, 21, 23, 25, 27}"ï¼Œæ¯æ·»åŠ ä¸€ä¸ªæ£‹å­ï¼Œè¯¥é¡¹å°±å¢åŠ 1ï¼Œ
-   * è¿™ç§åšæ³•å…è®¸æ·»åŠ å¤šä½™çš„æ£‹å­(ä¾‹å¦‚æ·»åŠ ç¬¬äºŒä¸ªå¸…ï¼Œå°±å˜æˆä»•äº†)ï¼Œä½†æ·»åŠ å‰è¦åšè¾¹ç•Œæ£€æµ‹
+  /* Êı×é"pcWhite[7]"ºÍ"pcBlack[7]"·Ö±ğ´ú±íºì·½ºÍºÚ·½Ã¿¸ö±øÖÖ¼´½«Õ¼ÓĞµÄĞòºÅ£¬
+   * ÒÔ"pcWhite[7]"ÎªÀı£¬ÓÉÓÚÆå×Ó16µ½31ÒÀ´Î´ú±í¡°Ë§ÊËÊËÏàÏàÂíÂí³µ³µÅÚÅÚ±ø±ø±ø±ø±ø¡±£¬
+   * ËùÒÔ×î³õÓ¦¸ÃÊÇ"pcWhite[7] = {16, 17, 19, 21, 23, 25, 27}"£¬Ã¿Ìí¼ÓÒ»¸öÆå×Ó£¬¸ÃÏî¾ÍÔö¼Ó1£¬
+   * ÕâÖÖ×ö·¨ÔÊĞíÌí¼Ó¶àÓàµÄÆå×Ó(ÀıÈçÌí¼ÓµÚ¶ş¸öË§£¬¾Í±ä³ÉÊËÁË)£¬µ«Ìí¼ÓÇ°Òª×ö±ß½ç¼ì²â
    */
   ClearBoard();
   lpFen = szFen;
@@ -446,7 +446,7 @@ void PositionStruct::FromFen(const char *szFen) {
     SetIrrev();
     return;
   }
-  // 2. è¯»å–æ£‹ç›˜ä¸Šçš„æ£‹å­
+  // 2. ¶ÁÈ¡ÆåÅÌÉÏµÄÆå×Ó
   i = RANK_TOP;
   j = FILE_LEFT;
   while (*lpFen != ' ') {
@@ -492,15 +492,15 @@ void PositionStruct::FromFen(const char *szFen) {
     }
   }
   lpFen ++;
-  // 3. ç¡®å®šè½®åˆ°å“ªæ–¹èµ°
+  // 3. È·¶¨ÂÖµ½ÄÄ·½×ß
   if (*lpFen == 'b') {
     ChangeSide();
   }
-  // 4. æŠŠå±€é¢è®¾æˆâ€œä¸å¯é€†â€
+  // 4. °Ñ¾ÖÃæÉè³É¡°²»¿ÉÄæ¡±
   SetIrrev();
 }
 
-// ç”ŸæˆFENä¸²
+// Éú³ÉFEN´®
 void PositionStruct::ToFen(char *szFen) const {
   int i, j, k, pc;
   char *lpFen;
@@ -529,31 +529,31 @@ void PositionStruct::ToFen(char *szFen) const {
     *lpFen = '/';
     lpFen ++;
   }
-  *(lpFen - 1) = ' '; // æŠŠæœ€åä¸€ä¸ª'/'æ›¿æ¢æˆ' '
+  *(lpFen - 1) = ' '; // °Ñ×îºóÒ»¸ö'/'Ìæ»»³É' '
   *lpFen = (this->sdPlayer == 0 ? 'w' : 'b');
   lpFen ++;
   *lpFen = '\0';
 }
 
-// å±€é¢é•œåƒ
+// ¾ÖÃæ¾µÏñ
 void PositionStruct::Mirror(void) {
   int i, sq, nMoveNumSave;
   uint16_t wmvList[MAX_MOVE_NUM];
   uint8_t ucsqList[32];
-  // å±€é¢é•œåƒéœ€è¦æŒ‰ä»¥ä¸‹æ­¥éª¤ä¾æ¬¡è¿›è¡Œï¼š
+  // ¾ÖÃæ¾µÏñĞèÒª°´ÒÔÏÂ²½ÖèÒÀ´Î½øĞĞ£º
 
-  // 1. è®°å½•æ‰€æœ‰å†å²ç€æ³•
+  // 1. ¼ÇÂ¼ËùÓĞÀúÊ·×Å·¨
   nMoveNumSave = this->nMoveNum;
   for (i = 1; i < nMoveNumSave; i ++) {
     wmvList[i] = this->rbsList[i].mvs.wmv;
   }
 
-  // 2. æ’¤æ¶ˆæ‰€æœ‰ç€æ³•
+  // 2. ³·ÏûËùÓĞ×Å·¨
   for (i = 1; i < nMoveNumSave; i ++) {
     UndoMakeMove();
   }
 
-  // 3. æŠŠæ‰€æœ‰æ£‹å­ä»æ£‹ç›˜ä¸Šæ‹¿èµ°ï¼Œä½ç½®è®°å½•åˆ°"ucsqList"æ•°ç»„ï¼›
+  // 3. °ÑËùÓĞÆå×Ó´ÓÆåÅÌÉÏÄÃ×ß£¬Î»ÖÃ¼ÇÂ¼µ½"ucsqList"Êı×é£»
   for (i = 16; i < 48; i ++) {
     sq = this->ucsqPieces[i];
     ucsqList[i - 16] = sq;
@@ -562,7 +562,7 @@ void PositionStruct::Mirror(void) {
     }
   }
 
-  // 4. æŠŠæ‹¿èµ°çš„æ£‹å­æŒ‰ç…§é•œåƒä½ç½®é‡æ–°æ”¾åˆ°æ£‹ç›˜ä¸Šï¼›
+  // 4. °ÑÄÃ×ßµÄÆå×Ó°´ÕÕ¾µÏñÎ»ÖÃÖØĞÂ·Åµ½ÆåÅÌÉÏ£»
   for (i = 16; i < 48; i ++) {
     sq = ucsqList[i - 16];
     if (sq != 0) {
@@ -570,23 +570,23 @@ void PositionStruct::Mirror(void) {
     }
   }
 
-  // 6. è¿˜åŸé•œåƒç€æ³•
+  // 6. »¹Ô­¾µÏñ×Å·¨
   SetIrrev();
   for (i = 1; i < nMoveNumSave; i ++) {
     MakeMove(MOVE_MIRROR(wmvList[i]));
   }
 }
 
-// ä»¥ä¸Šæ˜¯ä¸€äº›å±€é¢å¤„ç†è¿‡ç¨‹
+// ÒÔÉÏÊÇÒ»Ğ©¾ÖÃæ´¦Àí¹ı³Ì
 
-// ä»¥ä¸‹æ˜¯ä¸€äº›ç€æ³•æ£€æµ‹è¿‡ç¨‹
+// ÒÔÏÂÊÇÒ»Ğ©×Å·¨¼ì²â¹ı³Ì
 
-// ç€æ³•åˆç†æ€§æ£€æµ‹ï¼Œä»…ç”¨åœ¨â€œæ€æ‰‹ç€æ³•â€çš„æ£€æµ‹ä¸­
+// ×Å·¨ºÏÀíĞÔ¼ì²â£¬½öÓÃÔÚ¡°É±ÊÖ×Å·¨¡±µÄ¼ì²âÖĞ
 bool PositionStruct::LegalMove(int mv) const {
   int sqSrc, sqDst, sqPin, pcMoved, pcCaptured, x, y, nSideTag;
-  // ç€æ³•åˆç†æ€§æ£€æµ‹åŒ…æ‹¬ä»¥ä¸‹å‡ ä¸ªæ­¥éª¤ï¼š
+  // ×Å·¨ºÏÀíĞÔ¼ì²â°üÀ¨ÒÔÏÂ¼¸¸ö²½Öè£º
 
-  // 1. æ£€æŸ¥è¦èµ°çš„å­æ˜¯å¦å­˜åœ¨
+  // 1. ¼ì²éÒª×ßµÄ×ÓÊÇ·ñ´æÔÚ
   nSideTag = SIDE_TAG(this->sdPlayer);
   sqSrc = SRC(mv);
   sqDst = DST(mv);
@@ -598,7 +598,7 @@ bool PositionStruct::LegalMove(int mv) const {
   __ASSERT_SQUARE(sqDst);
   __ASSERT_PIECE(pcMoved);
 
-  // 2. æ£€æŸ¥åƒåˆ°çš„å­æ˜¯å¦ä¸ºå¯¹æ–¹æ£‹å­(å¦‚æœæœ‰åƒå­å¹¶ä¸”æ²¡æœ‰å‡å˜çš„è¯)
+  // 2. ¼ì²é³Ôµ½µÄ×ÓÊÇ·ñÎª¶Ô·½Æå×Ó(Èç¹ûÓĞ³Ô×Ó²¢ÇÒÃ»ÓĞÉı±äµÄ»°)
   pcCaptured = this->ucpcSquares[sqDst];
   if (sqSrc != sqDst && (pcCaptured & nSideTag) != 0) {
     return false;
@@ -606,35 +606,35 @@ bool PositionStruct::LegalMove(int mv) const {
   __ASSERT_BOUND(0, PIECE_INDEX(pcMoved), 15);
   switch (PIECE_INDEX(pcMoved)) {
 
-  // 3. å¦‚æœæ˜¯å¸…(å°†)æˆ–ä»•(å£«)ï¼Œåˆ™å…ˆçœ‹æ˜¯å¦åœ¨ä¹å®«å†…ï¼Œå†çœ‹æ˜¯å¦æ˜¯åˆç†ä½ç§»
+  // 3. Èç¹ûÊÇË§(½«)»òÊË(Ê¿)£¬ÔòÏÈ¿´ÊÇ·ñÔÚ¾Å¹¬ÄÚ£¬ÔÙ¿´ÊÇ·ñÊÇºÏÀíÎ»ÒÆ
   case KING_FROM:
     return IN_FORT(sqDst) && KING_SPAN(sqSrc, sqDst);
   case ADVISOR_FROM:
   case ADVISOR_TO:
     if (sqSrc == sqDst) {
-      // è€ƒè™‘å‡å˜ï¼Œåœ¨åº•çº¿å¹¶ä¸”å…µ(å’)ä¸å…¨æ—¶ï¼Œæ‰å¯å‡å˜
+      // ¿¼ÂÇÉı±ä£¬ÔÚµ×Ïß²¢ÇÒ±ø(×ä)²»È«Ê±£¬²Å¿ÉÉı±ä
       return CAN_PROMOTE(sqSrc) && CanPromote();
     } else {
       return IN_FORT(sqDst) && ADVISOR_SPAN(sqSrc, sqDst);
     }
 
-  // 4. å¦‚æœæ˜¯ç›¸(è±¡)ï¼Œåˆ™å…ˆçœ‹æ˜¯å¦è¿‡æ²³ï¼Œå†çœ‹æ˜¯å¦æ˜¯åˆç†ä½ç§»ï¼Œæœ€åçœ‹æœ‰æ²¡æœ‰è¢«å¡è±¡çœ¼
+  // 4. Èç¹ûÊÇÏà(Ïó)£¬ÔòÏÈ¿´ÊÇ·ñ¹ıºÓ£¬ÔÙ¿´ÊÇ·ñÊÇºÏÀíÎ»ÒÆ£¬×îºó¿´ÓĞÃ»ÓĞ±»ÈûÏóÑÛ
   case BISHOP_FROM:
   case BISHOP_TO:
     if (sqSrc == sqDst) {
-      // è€ƒè™‘å‡å˜ï¼Œåœ¨åº•çº¿å¹¶ä¸”å…µ(å’)ä¸å…¨æ—¶ï¼Œæ‰å¯å‡å˜
+      // ¿¼ÂÇÉı±ä£¬ÔÚµ×Ïß²¢ÇÒ±ø(×ä)²»È«Ê±£¬²Å¿ÉÉı±ä
       return CAN_PROMOTE(sqSrc) && CanPromote();
     } else {
       return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) && this->ucpcSquares[BISHOP_PIN(sqSrc, sqDst)] == 0;
     }
 
-  // 5. å¦‚æœæ˜¯é©¬ï¼Œåˆ™å…ˆçœ‹çœ‹æ˜¯å¦æ˜¯åˆç†ä½ç§»ï¼Œå†çœ‹æœ‰æ²¡æœ‰è¢«è¹©é©¬è…¿
+  // 5. Èç¹ûÊÇÂí£¬ÔòÏÈ¿´¿´ÊÇ·ñÊÇºÏÀíÎ»ÒÆ£¬ÔÙ¿´ÓĞÃ»ÓĞ±»õ¿ÂíÍÈ
   case KNIGHT_FROM:
   case KNIGHT_TO:
     sqPin = KNIGHT_PIN(sqSrc, sqDst);
     return sqPin != sqSrc && this->ucpcSquares[sqPin] == 0;
 
-  // 6. å¦‚æœæ˜¯è½¦ï¼Œåˆ™å…ˆçœ‹æ˜¯æ¨ªå‘ç§»åŠ¨è¿˜æ˜¯çºµå‘ç§»åŠ¨ï¼Œå†è¯»å–ä½è¡Œæˆ–ä½åˆ—çš„ç€æ³•é¢„ç”Ÿæˆæ•°ç»„
+  // 6. Èç¹ûÊÇ³µ£¬ÔòÏÈ¿´ÊÇºáÏòÒÆ¶¯»¹ÊÇ×İÏòÒÆ¶¯£¬ÔÙ¶ÁÈ¡Î»ĞĞ»òÎ»ÁĞµÄ×Å·¨Ô¤Éú³ÉÊı×é
   case ROOK_FROM:
   case ROOK_TO:
     x = FILE_X(sqSrc);
@@ -655,7 +655,7 @@ bool PositionStruct::LegalMove(int mv) const {
       return false;
     }
 
-  // 7. å¦‚æœæ˜¯ç‚®ï¼Œåˆ¤æ–­èµ·æ¥å’Œè½¦ä¸€æ ·
+  // 7. Èç¹ûÊÇÅÚ£¬ÅĞ¶ÏÆğÀ´ºÍ³µÒ»Ñù
   case CANNON_FROM:
   case CANNON_TO:
     x = FILE_X(sqSrc);
@@ -676,7 +676,7 @@ bool PositionStruct::LegalMove(int mv) const {
       return false;
     }
 
-  // 8. å¦‚æœæ˜¯å…µ(å’)ï¼Œåˆ™æŒ‰çº¢æ–¹å’Œé»‘æ–¹åˆ†æƒ…å†µè®¨è®º
+  // 8. Èç¹ûÊÇ±ø(×ä)£¬Ôò°´ºì·½ºÍºÚ·½·ÖÇé¿öÌÖÂÛ
   default:
     if (AWAY_HALF(sqDst, this->sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
       return true;
@@ -686,29 +686,29 @@ bool PositionStruct::LegalMove(int mv) const {
   }
 }
 
-// å°†å†›æ£€æµ‹
+// ½«¾ü¼ì²â
 int PositionStruct::CheckedBy(bool bLazy) const {
   int pcCheckedBy, i, sqSrc, sqDst, sqPin, pc, x, y, nOppSideTag;
   SlideMaskStruct *lpsmsRank, *lpsmsFile;
 
   pcCheckedBy = 0;
   nOppSideTag = OPP_SIDE_TAG(this->sdPlayer);
-  // å°†å†›åˆ¤æ–­åŒ…æ‹¬ä»¥ä¸‹å‡ éƒ¨åˆ†å†…å®¹ï¼š
+  // ½«¾üÅĞ¶Ï°üÀ¨ÒÔÏÂ¼¸²¿·ÖÄÚÈİ£º
 
-  // 1. åˆ¤æ–­å¸…(å°†)æ˜¯å¦åœ¨æ£‹ç›˜ä¸Š
+  // 1. ÅĞ¶ÏË§(½«)ÊÇ·ñÔÚÆåÅÌÉÏ
   sqSrc = this->ucsqPieces[SIDE_TAG(this->sdPlayer)];
   if (sqSrc == 0) {
     return 0;
   }
   __ASSERT_SQUARE(sqSrc);
 
-  // 2. è·å¾—å¸…(å°†)æ‰€åœ¨æ ¼å­çš„ä½è¡Œå’Œä½åˆ—
+  // 2. »ñµÃË§(½«)ËùÔÚ¸ñ×ÓµÄÎ»ĞĞºÍÎ»ÁĞ
   x = FILE_X(sqSrc);
   y = RANK_Y(sqSrc);
   lpsmsRank = RankMaskPtr(x, y);
   lpsmsFile = FileMaskPtr(x, y);
 
-  // 3. åˆ¤æ–­æ˜¯å¦å°†å¸…å¯¹è„¸
+  // 3. ÅĞ¶ÏÊÇ·ñ½«Ë§¶ÔÁ³
   sqDst = this->ucsqPieces[nOppSideTag + KING_FROM];
   if (sqDst != 0) {
     __ASSERT_SQUARE(sqDst);
@@ -717,12 +717,12 @@ int PositionStruct::CheckedBy(bool bLazy) const {
     }
   }
 
-  // 4. åˆ¤æ–­æ˜¯å¦è¢«é©¬å°†å†›
+  // 4. ÅĞ¶ÏÊÇ·ñ±»Âí½«¾ü
   for (i = KNIGHT_FROM; i <= KNIGHT_TO; i ++) {
     sqDst = this->ucsqPieces[nOppSideTag + i];
     if (sqDst != 0) {
       __ASSERT_SQUARE(sqDst);
-      sqPin = KNIGHT_PIN(sqDst, sqSrc); // æ³¨æ„ï¼ŒsqSrcå’ŒsqDstæ˜¯åçš„ï¼
+      sqPin = KNIGHT_PIN(sqDst, sqSrc); // ×¢Òâ£¬sqSrcºÍsqDstÊÇ·´µÄ£¡
       if (sqPin != sqDst && this->ucpcSquares[sqPin] == 0) {
         if (bLazy || pcCheckedBy > 0) {
           return CHECK_MULTI;
@@ -733,7 +733,7 @@ int PositionStruct::CheckedBy(bool bLazy) const {
     }
   }
 
-  // 5. åˆ¤æ–­æ˜¯å¦è¢«è½¦å°†å†›æˆ–å°†å¸…å¯¹è„¸
+  // 5. ÅĞ¶ÏÊÇ·ñ±»³µ½«¾ü»ò½«Ë§¶ÔÁ³
   for (i = ROOK_FROM; i <= ROOK_TO; i ++) {
     sqDst = this->ucsqPieces[nOppSideTag + i];
     if (sqDst != 0) {
@@ -758,7 +758,7 @@ int PositionStruct::CheckedBy(bool bLazy) const {
     }
   }
 
-  // 6. åˆ¤æ–­æ˜¯å¦è¢«ç‚®å°†å†›
+  // 6. ÅĞ¶ÏÊÇ·ñ±»ÅÚ½«¾ü
   for (i = CANNON_FROM; i <= CANNON_TO; i ++) {
     sqDst = this->ucsqPieces[nOppSideTag + i];
     if (sqDst != 0) {
@@ -783,9 +783,9 @@ int PositionStruct::CheckedBy(bool bLazy) const {
     }
   }
 
-  // 7. åˆ¤æ–­æ˜¯å¦è¢«å…µ(å’)å°†å†›
+  // 7. ÅĞ¶ÏÊÇ·ñ±»±ø(×ä)½«¾ü
   for (sqDst = sqSrc - 1; sqDst <= sqSrc + 1; sqDst += 2) {
-    // å¦‚æœå¸…(å°†)åœ¨è¾¹çº¿(ElephantEyeå…è®¸)ï¼Œé‚£ä¹ˆæ–­è¨€ä¸æˆç«‹
+    // Èç¹ûË§(½«)ÔÚ±ßÏß(ElephantEyeÔÊĞí)£¬ÄÇÃ´¶ÏÑÔ²»³ÉÁ¢
     // __ASSERT_SQUARE(sqDst);
     pc = this->ucpcSquares[sqDst];
     if ((pc & nOppSideTag) != 0 && PIECE_INDEX(pc) >= PAWN_FROM) {
@@ -807,7 +807,7 @@ int PositionStruct::CheckedBy(bool bLazy) const {
   return pcCheckedBy;
 }
 
-// åˆ¤æ–­æ˜¯å¦è¢«å°†æ­»
+// ÅĞ¶ÏÊÇ·ñ±»½«ËÀ
 bool PositionStruct::IsMate(void) {
   int i, nGenNum;
   MoveStruct mvsGen[MAX_GEN_MOVES];
@@ -818,7 +818,7 @@ bool PositionStruct::IsMate(void) {
       return false;
     }
   }
-  // ç€æ³•ç”Ÿæˆåˆ†ä¸¤éƒ¨åˆ†åšï¼Œè¿™æ ·å¯ä»¥èŠ‚çº¦æ—¶é—´
+  // ×Å·¨Éú³É·ÖÁ½²¿·Ö×ö£¬ÕâÑù¿ÉÒÔ½ÚÔ¼Ê±¼ä
   nGenNum = GenNonCapMoves(mvsGen);
   for (i = 0; i < nGenNum; i ++) {
     if (MakeMove(mvsGen[i].wmv)) {
@@ -829,7 +829,7 @@ bool PositionStruct::IsMate(void) {
   return true;
 }
 
-// è®¾ç½®å°†å†›çŠ¶æ€ä½
+// ÉèÖÃ½«¾ü×´Ì¬Î»
 inline void SetPerpCheck(uint32_t &dwPerpCheck, int nChkChs) {
   if (nChkChs == 0) {
     dwPerpCheck = 0;
@@ -840,38 +840,38 @@ inline void SetPerpCheck(uint32_t &dwPerpCheck, int nChkChs) {
   }
 }
 
-// é‡å¤å±€é¢æ£€æµ‹
+// ÖØ¸´¾ÖÃæ¼ì²â
 int PositionStruct::RepStatus(int nRecur) const {
-  // å‚æ•°"nRecur"æŒ‡é‡å¤æ¬¡æ•°ï¼Œåœ¨æœç´¢ä¸­å–1ä»¥æé«˜æœç´¢æ•ˆç‡(é»˜è®¤å€¼)ï¼Œæ ¹ç»“ç‚¹å¤„å–3ä»¥é€‚åº”è§„åˆ™
+  // ²ÎÊı"nRecur"Ö¸ÖØ¸´´ÎÊı£¬ÔÚËÑË÷ÖĞÈ¡1ÒÔÌá¸ßËÑË÷Ğ§ÂÊ(Ä¬ÈÏÖµ)£¬¸ù½áµã´¦È¡3ÒÔÊÊÓ¦¹æÔò
   int sd;
   uint32_t dwPerpCheck, dwOppPerpCheck;
   const RollbackStruct *lprbs;
-  /* é‡å¤å±€é¢æ£€æµ‹åŒ…æ‹¬ä»¥ä¸‹å‡ ä¸ªæ­¥éª¤ï¼š
+  /* ÖØ¸´¾ÖÃæ¼ì²â°üÀ¨ÒÔÏÂ¼¸¸ö²½Öè£º
    *
-   * 1. é¦–å…ˆåˆ¤æ–­æ£€æµ‹é‡å¤çš„è¿·ä½ ç½®æ¢è¡¨ä¸­æ˜¯å¦å¯èƒ½æœ‰å½“å‰å±€é¢ï¼Œå¦‚æœæ²¡æœ‰å¯èƒ½ï¼Œå°±ç”¨ä¸ç€åˆ¤æ–­äº†
-   *    ç½®æ¢è¡¨"ucRepHash"æ˜¯ElephantEyeçš„ä¸€ä¸ªç‰¹è‰²ï¼Œå±€é¢æ¯æ‰§è¡Œä¸€ä¸ªç€æ³•æ—¶ï¼Œå°±ä¼šåœ¨ç½®æ¢è¡¨é¡¹ä¸­è®°å½•ä¸‹å½“å‰çš„"nMoveNum"
-   *    å¦‚æœç½®æ¢è¡¨é¡¹å·²ç»å¡«æœ‰å…¶ä»–å±€é¢ï¼Œå°±ä¸å¿…è¦†ç›–äº†ï¼Œå‚é˜…"MakeMove()"å‡½æ•°
-   *    å› æ­¤æ’¤æ¶ˆç€æ³•æ—¶ï¼Œåªè¦æŸ¥æ‰¾ç½®æ¢è¡¨é¡¹çš„å€¼æ˜¯å¦ç­‰äºå½“å‰çš„"nMoveNum"ï¼Œå¦‚æœç›¸ç­‰åˆ™æ¸…ç©ºè¯¥é¡¹
-   *    å¦‚æœä¸ç­‰äºå½“å‰çš„"nMoveNum"ï¼Œåˆ™è¯´æ˜ä¹‹å‰è¿˜æœ‰å±€é¢å æœ‰è¿™ä¸ªç½®æ¢è¡¨é¡¹ï¼Œä¸å¿…æ¸…ç©ºè¯¥é¡¹ï¼Œå‚é˜…"position.h"ä¸­çš„"UndoMakeMove()"å‡½æ•°
+   * 1. Ê×ÏÈÅĞ¶Ï¼ì²âÖØ¸´µÄÃÔÄãÖÃ»»±íÖĞÊÇ·ñ¿ÉÄÜÓĞµ±Ç°¾ÖÃæ£¬Èç¹ûÃ»ÓĞ¿ÉÄÜ£¬¾ÍÓÃ²»×ÅÅĞ¶ÏÁË
+   *    ÖÃ»»±í"ucRepHash"ÊÇElephantEyeµÄÒ»¸öÌØÉ«£¬¾ÖÃæÃ¿Ö´ĞĞÒ»¸ö×Å·¨Ê±£¬¾Í»áÔÚÖÃ»»±íÏîÖĞ¼ÇÂ¼ÏÂµ±Ç°µÄ"nMoveNum"
+   *    Èç¹ûÖÃ»»±íÏîÒÑ¾­ÌîÓĞÆäËû¾ÖÃæ£¬¾Í²»±Ø¸²¸ÇÁË£¬²ÎÔÄ"MakeMove()"º¯Êı
+   *    Òò´Ë³·Ïû×Å·¨Ê±£¬Ö»Òª²éÕÒÖÃ»»±íÏîµÄÖµÊÇ·ñµÈÓÚµ±Ç°µÄ"nMoveNum"£¬Èç¹ûÏàµÈÔòÇå¿Õ¸ÃÏî
+   *    Èç¹û²»µÈÓÚµ±Ç°µÄ"nMoveNum"£¬ÔòËµÃ÷Ö®Ç°»¹ÓĞ¾ÖÃæÕ¼ÓĞÕâ¸öÖÃ»»±íÏî£¬²»±ØÇå¿Õ¸ÃÏî£¬²ÎÔÄ"position.h"ÖĞµÄ"UndoMakeMove()"º¯Êı
    */
   if (this->ucRepHash[this->zobr.dwKey & REP_HASH_MASK] == 0) {
     return REP_NONE;
   }
 
-  // 2. åˆå§‹åŒ–
+  // 2. ³õÊ¼»¯
   sd = OPP_SIDE(this->sdPlayer);
   dwPerpCheck = dwOppPerpCheck = 0x1ffff;
   lprbs = this->rbsList + this->nMoveNum - 1;
 
-  // 3. æ£€æŸ¥ä¸Šä¸€ä¸ªç€æ³•ï¼Œå¦‚æœæ˜¯ç©ºç€æˆ–åƒå­ç€æ³•ï¼Œå°±ä¸å¯èƒ½æœ‰é‡å¤äº†
+  // 3. ¼ì²éÉÏÒ»¸ö×Å·¨£¬Èç¹ûÊÇ¿Õ×Å»ò³Ô×Ó×Å·¨£¬¾Í²»¿ÉÄÜÓĞÖØ¸´ÁË
   while (lprbs->mvs.wmv != 0 && lprbs->mvs.CptDrw <= 0) {
     __ASSERT(lprbs >= this->rbsList);
 
-    // 4. åˆ¤æ–­åŒæ–¹çš„é•¿æ‰“çº§åˆ«ï¼Œ0è¡¨ç¤ºæ— é•¿æ‰“ï¼Œ0xffffè¡¨ç¤ºé•¿æ‰ï¼Œ0x10000è¡¨ç¤ºé•¿å°†
+    // 4. ÅĞ¶ÏË«·½µÄ³¤´ò¼¶±ğ£¬0±íÊ¾ÎŞ³¤´ò£¬0xffff±íÊ¾³¤×½£¬0x10000±íÊ¾³¤½«
     if (sd == this->sdPlayer) {
       SetPerpCheck(dwPerpCheck, lprbs->mvs.ChkChs);
 
-      // 5. å¯»æ‰¾é‡å¤å±€é¢ï¼Œå¦‚æœé‡å¤æ¬¡æ•°è¾¾åˆ°é¢„å®šæ¬¡æ•°ï¼Œåˆ™è¿”å›é‡å¤è®°å·
+      // 5. Ñ°ÕÒÖØ¸´¾ÖÃæ£¬Èç¹ûÖØ¸´´ÎÊı´ïµ½Ô¤¶¨´ÎÊı£¬Ôò·µ»ØÖØ¸´¼ÇºÅ
       if (lprbs->zobr.dwLock0 == this->zobr.dwLock0 && lprbs->zobr.dwLock1 == this->zobr.dwLock1) {
         nRecur --;
         if (nRecur == 0) {
@@ -891,4 +891,4 @@ int PositionStruct::RepStatus(int nRecur) const {
   return REP_NONE;
 }
 
-// ä»¥ä¸Šæ˜¯ä¸€äº›ç€æ³•æ£€æµ‹è¿‡ç¨‹
+// ÒÔÉÏÊÇÒ»Ğ©×Å·¨¼ì²â¹ı³Ì

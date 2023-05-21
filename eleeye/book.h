@@ -24,10 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #define BOOK_H
 
 #include <stdio.h>
-#include "base.h"
+#include "../base/base.h"
 #include "position.h"
-
-#pragma warning (disable: 4996)
 
 struct BookStruct {
   union {
@@ -51,7 +49,7 @@ struct BookFileStruct {
       return false;
     } else {
       fseek(fp, 0, SEEK_END);
-      nLen = (int) (ftell(fp) / sizeof(BookStruct));
+      nLen = ftell(fp) / sizeof(BookStruct);
       return true;
     }
   }
@@ -68,7 +66,7 @@ struct BookFileStruct {
   }
 };
 
-// è·å–å¼€å±€åº“ç€æ³•
+// »ñÈ¡¿ª¾Ö¿â×Å·¨
 int GetBookMoves(const PositionStruct &pos, const char *szBookFile, BookStruct *lpbks);
 
 #endif
